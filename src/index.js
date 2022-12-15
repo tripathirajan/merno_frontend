@@ -1,13 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import 'simplebar/src/simplebar.css';
+import "@fontsource/poppins"
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import AppThemeProvider from "./theme";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './storage';
+import { HelmetProvider } from 'react-helmet-async';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <HelmetProvider>
+      <Provider store={store}>
+        <AppThemeProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/*" element={<App />} />
+            </Routes>
+          </BrowserRouter>
+        </AppThemeProvider>
+      </Provider>
+    </HelmetProvider>
   </React.StrictMode>
 );
 

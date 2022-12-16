@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Grid, Paper, Stack, TextField } from '@mui/material';
+import { Box, Grid, Paper, Stack, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Page from '../../components/Page';
 import { FormikProvider, useFormik, Form } from 'formik'
@@ -76,36 +76,45 @@ const AddVendor = () => {
                                         fullWidth
                                         type="text"
                                         label="Vendor Name"
+                                        size="small"
                                         {...getFieldProps('name')}
                                         error={Boolean(touched.name && errors.name)}
                                         helperText={touched.name && errors.name}
+                                        autoFocus
                                     />
                                     <TextField
                                         name="email"
                                         fullWidth
                                         type="email"
                                         label="Vendor Email"
+                                        size="small"
                                         {...getFieldProps('email')}
                                         error={Boolean(touched.email && errors.email)}
                                         helperText={touched.email && errors.email}
                                     />
-                                    <AddressAutoComplete
-                                        name="address"
-                                        fullWidth
-                                        label="Vendor Address"
-                                        onPlaceSelected={({ formatted_address: formattedAddress, ...rest }) => {
-                                            console.log('address', rest);
-                                            setFieldValue('address', formattedAddress)
-                                        }}
-                                        {...getFieldProps('address')}
-                                        error={Boolean(touched.address && errors.address)}
-                                        helperText={touched.address && errors.address}
-                                    />
+                                    <Box sx={{ width: '100%' }}>
+                                        <AddressAutoComplete
+                                            name="address"
+                                            fullWidth
+                                            size="small"
+                                            label="Vendor Address"
+                                            onPlaceSelected={({ formatted_address: formattedAddress, ...rest }) => {
+                                                console.log('address', rest);
+                                                setFieldValue('address', formattedAddress)
+                                            }}
+                                            {...getFieldProps('address')}
+                                            error={Boolean(touched.address && errors.address)}
+                                            helperText={touched.address && errors.address}
+                                            disabled
+                                        />
+                                        <Typography variant='caption' sx={{ color: 'text.secondary' }}> Pin Location on map for address</Typography>
+                                    </Box>
                                     <TextField
                                         name="contactNo"
                                         fullWidth
                                         type="text"
                                         label="Vendor Contact No."
+                                        size="small"
                                         {...getFieldProps('contactNo')}
                                         error={Boolean(touched.contactNo && errors.contactNo)}
                                         helperText={touched.contactNo && errors.contactNo}
@@ -114,6 +123,7 @@ const AddVendor = () => {
                                         name="contactPersonName"
                                         fullWidth
                                         type="text"
+                                        size="small"
                                         label="Contact Person Name"
                                         {...getFieldProps('contactPersonName')}
                                         error={Boolean(touched.contactPersonName && errors.contactPersonName)}
@@ -123,6 +133,7 @@ const AddVendor = () => {
                                         name="contactPersonMobile"
                                         fullWidth
                                         type="text"
+                                        size="small"
                                         label="Contact Person Mobile No."
                                         {...getFieldProps('contactPersonMobile')}
                                         error={Boolean(touched.contactPersonMobile && errors.contactPersonMobile)}
@@ -132,6 +143,7 @@ const AddVendor = () => {
                                         name="contactPersonEmail"
                                         fullWidth
                                         type="text"
+                                        size="small"
                                         label="Contact Person Email"
                                         {...getFieldProps('contactPersonEmail')}
                                         error={Boolean(touched.contactPersonEmail && errors.contactPersonEmail)}

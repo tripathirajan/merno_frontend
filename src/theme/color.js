@@ -85,11 +85,11 @@ export const WARNING = {
 };
 
 export const ERROR = {
-    lighter: '#FFE7D9',
-    light: '#FFA48D',
-    main: '#FF4842',
-    dark: '#B72136',
-    darker: '#7A0C2E',
+    lighter: '#f8bbd0',
+    light: '#f06292',
+    main: '#e91e63',
+    dark: '#d81b60',
+    darker: '#c2185b',
     contrastText: '#fff'
 };
 

@@ -42,7 +42,7 @@ const AddVendor = () => {
         }
     })
 
-    const { errors, touched, values, isSubmitting, setFieldValue, handleSubmit, getFieldProps } = vendorFormik;
+    const { errors, touched, isSubmitting, setFieldValue, handleSubmit, getFieldProps } = vendorFormik;
 
     const handleGoBack = () => {
         navigate('/vendor');

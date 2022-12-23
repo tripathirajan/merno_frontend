@@ -78,6 +78,7 @@ const Login = () => {
                     <Stack spacing={3}>
                         <TextField
                             fullWidth
+                            placeholder='Enter username or email'
                             autoComplete="username"
                             type="username"
                             label="Username"
@@ -88,6 +89,7 @@ const Login = () => {
                         />
                         <TextField
                             fullWidth
+                            placeholder='Enter your password'
                             autoComplete="current-password"
                             type={'password'}
                             label="Password"

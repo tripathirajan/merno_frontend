@@ -17,9 +17,9 @@ import { DRAWER_WIDTH, HEADER_MOBILE, HEADER_DESKTOP } from '../../../constants'
 
 const RootStyle = styled((props) => <AppBar  {...props} />)(({ theme }) => ({
     boxShadow: 'none',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)', // Fix on Mobile
-    backgroundColor: alpha(theme.palette.background.default, 0.7),
+    backdropFilter: 'blur(6px)',
+    WebkitBackdropFilter: 'blur(6px)', // Fix on Mobile
+    backgroundColor: alpha(theme.palette.background.default, 0.72),
     padding: theme.spacing(1),
     [theme.breakpoints.up('lg')]: {
         width: `calc(100% - ${DRAWER_WIDTH + 1}px)`

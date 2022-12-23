@@ -20,6 +20,7 @@ const AuthLayout = () => {
             <Container maxWidth="sm">
                 <Paper
                     sx={{
+                        p: 2,
                         maxWidth: { xs: 400, lg: 475 },
                         margin: { xs: 2, md: 3 },
                         '& > *': {

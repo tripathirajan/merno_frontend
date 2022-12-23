@@ -10,10 +10,11 @@ const style = {
     minWidth: 400,
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
-    boxShadow: 8
+    boxShadow: 8,
+    p: 2
 };
 
-const AppModal = ({ children, open, handleClose, title = 'Title', footer = '', ...rest }) => {
+const AppModal = ({ children, open, handleClose, title = 'Title', footer = '', paperProps }) => {
 
     const handleModalClose = (event, reason) => {
         if (reason !== 'backdropClick') {
@@ -35,7 +36,10 @@ const AppModal = ({ children, open, handleClose, title = 'Title', footer = '', .
                 }}
             >
                 <Fade in={open}>
-                    <Paper sx={style} variant="outlined">
+                    <Paper
+                        sx={{ ...paperProps, ...style }}
+                        variant="outlined"
+                    >
                         <Stack direction="column" spacing={1}>
                             <Box sx={{ pt: 1 }} display="flex" flexDirection="row" alignItems="center">
                                 <Typography color="secondary" variant='subtitle1'>{title}</Typography>

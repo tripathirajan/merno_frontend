@@ -1,11 +1,15 @@
-import React from 'react'
-import { Box, Button, Grid, Paper, Stack, TextField, Typography } from '@mui/material';
+import React, { useRef, useState } from 'react'
+import { Box, Button, Grid, Paper, Stack, TextField, Typography, FormControlLabel, Switch } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Page from '../../components/Page';
 import { FormikProvider, useFormik, Form } from 'formik'
 import * as Yup from 'yup';
 import AddressAutoComplete from '../../components/AddressAutoComplete';
-import FileUploaded from '../../components/FileUploader';
+import FileUploader from '../../components/FileUploader';
+import { addVendor } from '../../storage/actions/vendorAction';
+import { useDispatch } from 'react-redux';
+import { ALERT_TYPE_ERROR, ALERT_TYPE_SUCCESS } from '../../constants';
+import AppAlert from '../../components/Alert';
 
 const vendorSchema = Yup.object().shape({
     name: Yup.string().min(2).max(100).required("Please enter vendor name"),
@@ -20,8 +24,14 @@ const vendorSchema = Yup.object().shape({
     lng: Yup.number(),
     image: Yup.mixed()
 });
+const alertInititialValue = { show: false, body: '', severity: ALERT_TYPE_ERROR };
+
 const AddVendor = () => {
+    const [appAlert, setAppAlert] = useState(alertInititialValue)
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const uploaderRef = useRef(null);
+
     const vendorFormik = useFormik({
         initialValues: {
             name: '',
@@ -31,18 +41,28 @@ const AddVendor = () => {
             contactPersonName: '',
             contactPersonMobile: '',
             contactPersonEmail: '',
-            isActive: false,
+            isActive: true,
             lat: 0.00,
             lng: 0.00,
             image: null
         },
         validationSchema: vendorSchema,
-        onSubmit: async (values, { setSubmitting }) => {
-            console.log('onsubmit', values);
+        onSubmit: async (values, { setSubmitting, resetForm }) => {
+            if (!values) return false;
+
+            const { success, message } = await dispatch(addVendor(values));
+            if (success) {
+                setAppAlert({ show: true, body: message, severity: ALERT_TYPE_SUCCESS })
+                resetForm();
+                uploaderRef?.current?.resetImages();
+            } else {
+                setAppAlert({ show: true, body: message, severity: ALERT_TYPE_ERROR });
+            }
+            setSubmitting(false);
         }
     })
 
-    const { errors, touched, isSubmitting, setFieldValue, handleSubmit, getFieldProps } = vendorFormik;
+    const { errors, touched, values, isSubmitting, setFieldValue, handleSubmit, getFieldProps } = vendorFormik;
 
     const handleGoBack = () => {
         navigate('/vendor');
@@ -53,6 +73,16 @@ const AddVendor = () => {
             legend={`Add Vendor`}
             onBackClick={handleGoBack}
         >
+            {
+                appAlert?.show && <AppAlert
+                    show={Boolean(appAlert?.show)}
+                    body={appAlert?.body} severity={appAlert?.severity}
+                    toast={true}
+                    handleClose={() => {
+                        setAppAlert(alertInititialValue)
+                    }}
+                />
+            }
             <FormikProvider value={vendorFormik}>
                 <Box
                     component={Form}
@@ -66,21 +96,22 @@ const AddVendor = () => {
                     }
                 >
                     <Paper
-                        sx={{ p: 2 }}
+                        sx={{ p: 2, pt: 3 }}
                     >
                         <Grid container spacing={2}>
-                            <Grid item lg={4} xs={12}>
-                                <FileUploaded
+                            <Grid item lg={5} xs={12}>
+                                <FileUploader
+                                    ref={uploaderRef}
                                     name="image"
-                                    handleOnChangeFile={(e) => {
-                                        setFieldValue("image", e?.currentTarget?.files[0]);
+                                    handleOnChangeFile={(files) => {
+                                        setFieldValue("image", files && files[0]);
                                     }}
                                 />
                                 {
                                     Boolean(touched.image && errors.image) ? <Typography variant="body2" color="error">{touched.image && errors.image}</Typography> : null
                                 }
                             </Grid>
-                            <Grid item lg={8} xs={12}>
+                            <Grid item lg={7} xs={12}>
                                 <Stack
                                     direction="column"
                                     alignItems="center"
@@ -179,14 +210,29 @@ const AddVendor = () => {
                                 </Stack>
                                 <Stack
                                     sx={{ mt: 3 }}
-                                    direction="row-reverse"
+                                    direction="row"
                                     justifyContent="flex-start"
                                     alignItems="center"
                                     spacing={2}
                                 >
+                                    <FormControlLabel
+                                        label="Is Active?"
+                                        labelPlacement="start"
+                                        control={
+                                            <Switch color='secondary' checked={values.isActive} name="isActive" {...getFieldProps('isActive')} />
+                                        }
+                                    />
+                                </Stack>
+                                <Stack
+                                    sx={{ mt: 3 }}
+                                    direction="row-reverse"
+                                    justifyContent="space-around"
+                                    alignItems="center"
+                                    spacing={2}
+                                >
                                     <Button
-
-                                        size="normal"
+                                        fullWidth
+                                        size="medium"
                                         type="submit"
                                         variant="contained"
                                         color="secondary"
@@ -195,8 +241,8 @@ const AddVendor = () => {
                                         Save
                                     </Button>
                                     <Button
-
-                                        size="normal"
+                                        fullWidth
+                                        size="medium"
                                         type="button"
                                         variant="text"
                                         onClick={handleGoBack}

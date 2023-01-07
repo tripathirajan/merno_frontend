@@ -12,9 +12,9 @@ const AppThemeProvider = ({ children }) => {
     const options = useMemo(() => ({
         palette,
         shape: {
-            borderRadius: 18,
-            borderRadiusSm: 20,
-            borderRadiusMd: 24
+            borderRadius: 12,
+            borderRadiusSm: 16,
+            borderRadiusMd: 20
         },
         breakpoints: {
             values: {

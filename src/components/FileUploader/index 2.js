@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDropzone } from 'react-dropzone';
 import { Box, Typography, Stack, styled, IconButton } from '@mui/material';
@@ -63,13 +63,8 @@ const Thumbnail = React.memo((props) => {
     </StyledThumbnailOuter>)
 });
 
-Thumbnail.proptypes = {
-    preview: PropTypes.string.isRequired,
-    onRemoveClick: PropTypes.func.isRequired
-}
-
-const FileUploader = forwardRef((props, ref) => {
-    const { name, handleOnChangeFile, sx } = props;
+const FileUploaded = React.memo(props => {
+    const { name, handleOnChangeFile } = props;
     const [files, setFiles] = useState([]);
     const { getRootProps, getInputProps } = useDropzone({
         accept: {
@@ -77,18 +72,15 @@ const FileUploader = forwardRef((props, ref) => {
         },
         maxFiles: 1,
         onDrop: acceptedFiles => {
-            const fileList = acceptedFiles.map(file => Object.assign(file, {
+            setFiles(acceptedFiles.map(file => Object.assign(file, {
                 preview: URL.createObjectURL(file)
-            }));
-            handleOnChangeFile(fileList);
-            setFiles(fileList);
+            })));
         }
     });
 
     useEffect(() => {
         // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
         return () => files.forEach(file => URL.revokeObjectURL(file.preview));
-        // eslint-disable-next-line
     }, []);
 
     const handleImageRemove = (index) => {
@@ -98,27 +90,12 @@ const FileUploader = forwardRef((props, ref) => {
         const filtered = files.filter((file, row) => row !== index);
         setFiles(filtered);
     }
-    const inputProps = useMemo(() => {
-        const props = getInputProps();
-        return {
-            ...props,
-            name: name,
-            type: 'file',
-        }
-    }, [name, getInputProps]);
 
-    useImperativeHandle(ref, () => ({
-        resetImages() {
-            handleImageRemove(-1);
-        }
-    }));
     return (
         <StyledContainer
             direction="column"
             component="section"
             spacing={2}
-            ref={ref}
-            sx={{ ...sx }}
         >
             <Stack
                 alignItems="center"
@@ -126,7 +103,9 @@ const FileUploader = forwardRef((props, ref) => {
                 {...getRootProps({ className: 'dropzone' })}
             >
                 <input
-                    {...inputProps}
+                    name={name}
+                    onChange={handleOnChangeFile}
+                    {...getInputProps()}
                 />
                 <Typography variant='body2' sx={{ color: 'text.secondary' }}>Click here or Drop files here.</Typography>
             </Stack>
@@ -141,8 +120,5 @@ const FileUploader = forwardRef((props, ref) => {
     )
 })
 
-FileUploader.proptypes = {
-    name: PropTypes.string.isRequired,
-    handleOnChangeFile: PropTypes.func.isRequired
-}
-export default React.memo(FileUploader);
+
+export default FileUploaded;

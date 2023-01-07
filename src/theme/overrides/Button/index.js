@@ -30,8 +30,8 @@ export default function Button(theme) {
                 },
                 text: {
                     backgroundColor: theme.palette.grey[200],
-                    paddingLeft: 10,
-                    paddingRight: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
                     '&:hover': {
                         backgroundColor: theme.palette.action.hover,
                     },

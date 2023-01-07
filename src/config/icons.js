@@ -7,6 +7,9 @@ import PaidTwoToneIcon from '@mui/icons-material/PaidTwoTone';
 import SquareFootTwoToneIcon from '@mui/icons-material/SquareFootTwoTone';
 import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
 import StorefrontTwoToneIcon from '@mui/icons-material/StorefrontTwoTone';
+import RemoveRedEyeTwoToneIcon from '@mui/icons-material/RemoveRedEyeTwoTone';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 
 const icons = {
     dashboard: GridViewTwoToneIcon,
@@ -17,7 +20,10 @@ const icons = {
     currency: PaidTwoToneIcon,
     unit: SquareFootTwoToneIcon,
     packageType: Inventory2TwoToneIcon,
-    vendor: StorefrontTwoToneIcon
+    vendor: StorefrontTwoToneIcon,
+    view: RemoveRedEyeTwoToneIcon,
+    delete: DeleteTwoToneIcon,
+    edit: EditTwoToneIcon
 }
 
 export default icons;

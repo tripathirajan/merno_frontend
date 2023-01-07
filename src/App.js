@@ -16,6 +16,7 @@ import Unit from "./pages/Master/Unit";
 import Currency from "./pages/Master/Currency";
 import Vendor from "./pages/Vendor";
 import AddVendor from "./pages/Vendor/AddVendor";
+import ViewVendor from "./pages/Vendor/ViewVendor";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="vendor">
               <Route index={true} element={<Vendor />} />
               <Route path="add" element={<AddVendor />} />
+              <Route path="view/:vendorId" element={<ViewVendor />} />
             </Route>
             {/* master section */}
             <Route path="product-category" element={<ProductCategory />} />

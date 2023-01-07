@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+
 import {
     DataGrid,
     GridToolbarContainer,
@@ -8,11 +10,12 @@ import {
     GridToolbarQuickFilter,
     GridLinkOperator
 } from '@mui/x-data-grid';
-import { Box, Paper, Stack, Button } from '@mui/material';
+import { Box, Paper, Stack, Button, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import NoDataFound from '../SvgIcons/NoDataFound';
 import MasterForm from '../MasterForm';
+import icons from '../../config/icons';
 
 
 const StyledGridOverlay = styled('div')(({ theme }) => ({
@@ -50,6 +53,9 @@ const StyledDataGrid = styled((props) => <DataGrid  {...props} />)(({ theme }) =
     '& .MuiDataGrid-cell': {
         borderBottom: `3px solid ${theme.palette.background.default}`,
         color: theme.palette.text.secondary
+    },
+    '& .MuiDataGrid-cell:focus': {
+        outline: 'none'
     },
     '& .primary-col': {
         color: theme.palette.text.primary
@@ -124,17 +130,15 @@ const AppDataGrid = ({
     disableForm = false,
     onAddClick,
     readOnly = false,
+    menus = [],
     ...rest }) => {
 
     const [editData, setEditData] = useState({});
     const [openModal, setOpenModal] = useState(false);
+    const [contextMenu, setContextMenu] = React.useState(null);
+    const [selectedRow, setSelectedRow] = React.useState();
 
-    const columnsWithSN = [{ field: 'sn', headerName: '#', width: 50, type: 'number', filterable: false }, ...columns];
-    const rowsWithSN = rows?.map((item, index) => ({ sn: (index + 1), ...item }));
-    const overrideAddAction = onAddClick && typeof onAddClick === 'function';
-    disableForm = disableForm || overrideAddAction;
-
-    const handleRowDoubleClick = (params, event, callback) => {
+    const handleRowDoubleClick = (params, event) => {
         if (disableForm) {
             event.preventDefault();
             return;
@@ -157,6 +161,66 @@ const AppDataGrid = ({
         }
         setOpenModal(true);
     }
+    const handleContextMenu = (event) => {
+        event.preventDefault();
+        setSelectedRow(event?.currentTarget?.getAttribute('data-id'));
+        setContextMenu(
+            contextMenu === null
+                ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
+                : null,
+        );
+    };
+    const handleClose = () => {
+        setContextMenu(null);
+    };
+
+    useEffect(() => {
+        if (contextMenu) {
+            handleClose();
+        }
+        // eslint-disable-next-line
+    }, []);
+
+    const columnsWithSN = [{ field: 'sn', headerName: '#', width: 50, type: 'number', filterable: false }, ...columns];
+    const rowsWithSN = rows?.map((item, index) => ({ sn: (index + 1), ...item }));
+    const overrideAddAction = onAddClick && typeof onAddClick === 'function';
+    disableForm = disableForm || overrideAddAction;
+
+    let componentProps = {
+        toolbar: {
+            showQuickFilter: true,
+            quickFilterProps: { debounceMs: 500 }
+        },
+        row: {
+            style: { cursor: 'pointer' },
+        },
+        filterPanel: {
+            linkOperators: [GridLinkOperator.And, GridLinkOperator.Or],
+            filterFormProps: {
+                columnInputProps: {
+                    variant: 'outlined',
+                    size: 'small',
+                    sx: { mt: 'auto', ml: 1 },
+                },
+                operatorInputProps: {
+                    variant: 'outlined',
+                    size: 'small',
+                    sx: { mt: 'auto', ml: 1 },
+                },
+                valueInputProps: {
+                    InputComponentProps: {
+                        variant: 'outlined',
+                        size: 'small',
+                    },
+                    sx: { mt: 'auto', ml: 1 }
+                }
+            }
+        }
+    }
+    if (menus?.length) {
+        componentProps.row["onContextMenu"] = handleContextMenu;
+        componentProps.row["style"] = { cursor: 'context-menu' };
+    }
     return (<>
         <Stack
             direction="column"
@@ -164,40 +228,12 @@ const AppDataGrid = ({
         >
             <Box component={Paper} sx={{ height: '75vh', width: '100%', p: 0 }} elevation={0}>
                 <StyledDataGrid
+                    disableSelectionOnClick={true}
+                    checkboxSelection={true}
                     rows={rowsWithSN}
                     columns={columnsWithSN}
                     density="comfortable"
-                    componentsProps={{
-                        toolbar: {
-                            showQuickFilter: true,
-                            quickFilterProps: { debounceMs: 500 }
-                        },
-                        row: {
-                            style: { cursor: 'pointer' },
-                        },
-                        filterPanel: {
-                            linkOperators: [GridLinkOperator.And, GridLinkOperator.Or],
-                            filterFormProps: {
-                                columnInputProps: {
-                                    variant: 'outlined',
-                                    size: 'small',
-                                    sx: { mt: 'auto', ml: 1 },
-                                },
-                                operatorInputProps: {
-                                    variant: 'outlined',
-                                    size: 'small',
-                                    sx: { mt: 'auto', ml: 1 },
-                                },
-                                valueInputProps: {
-                                    InputComponentProps: {
-                                        variant: 'outlined',
-                                        size: 'small',
-                                    },
-                                    sx: { mt: 'auto', ml: 1 }
-                                }
-                            }
-                        }
-                    }}
+                    componentsProps={componentProps}
                     components={{
                         ColumnMenu: StyledGridColumnMenu,
                         NoRowsOverlay: CustomOverlay,
@@ -209,6 +245,9 @@ const AppDataGrid = ({
                     onRowDoubleClick={handleRowDoubleClick}
                     {...rest}
                 />
+                {
+                    menus?.length && <ContextMenu menus={menus} contextMenu={contextMenu} handleClose={handleClose} selectedRow={selectedRow} />
+                }
             </Box>
         </Stack>
         {
@@ -224,4 +263,59 @@ const AppDataGrid = ({
     )
 }
 
+AppDataGrid.propTypes = {
+    rows: PropTypes.array.isRequired,
+    columns: PropTypes.array.isRequired,
+    keyField: PropTypes.string,
+    onFormSave: PropTypes.func,
+    onFormUpdate: PropTypes.func,
+    afterFormClose: PropTypes.func,
+    title: PropTypes.string,
+    totalRecord: PropTypes.number,
+    addActionLabel: PropTypes.string,
+    disableForm: PropTypes.bool,
+    onAddClick: PropTypes.func,
+    readOnly: PropTypes.bool,
+}
 export default React.memo(AppDataGrid);
+
+const ContextMenu = ({ menus, contextMenu, selectedRow, handleClose }) => {
+    return (<Menu
+        variant='menu'
+        open={contextMenu !== null}
+        onClose={handleClose}
+        anchorReference="anchorPosition"
+        anchorPosition={
+            contextMenu !== null
+                ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                : undefined
+        }
+        componentsProps={{
+            root: {
+                onContextMenu: (e) => {
+                    e.preventDefault();
+                    handleClose();
+                },
+            },
+        }}
+        MenuListProps={{
+            dense: true
+        }}
+
+    >
+        {
+            menus && menus.map(({ displayTitle, icon, action }, index) => {
+                const MenuIcon = icons[icon]
+                return (<MenuItem key={index} onClick={() => {
+                    if (action && typeof action === 'function') {
+                        action(selectedRow)
+                    }
+                    handleClose()
+                }}>
+                    {icon && <ListItemIcon><MenuIcon /></ListItemIcon>}
+                    <ListItemText>{displayTitle}</ListItemText>
+                </MenuItem>)
+            })
+        }
+    </Menu>);
+}

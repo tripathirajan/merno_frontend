@@ -28,6 +28,9 @@ export const HTTP_STATUS_CODE_NOT_FOUND = 404;
 export const HTTP_STATUS_CODE_INTERNAL_SERVER_ERROR = 500;
 export const HTTP_CODE_UNAUTHORIZED = 401;
 
+//------Combos ------
+export const COMBO_TYPE_VENDOR = 'vendor';
+export const COMBO_TYPE_BRAND = 'brand';
 
 // -------- API End points --------
 
@@ -78,3 +81,11 @@ export const MASTER_UNIT_ADD = "/master/addUnit";
 export const MASTER_UNIT_LIST = "/master/getAllUnit";
 export const MASTER_UNIT_INFO = "/master/getUnitInfo";
 export const MASTER_UNIT_UPDATE = "/master/updateUnit";
+
+// vendor
+export const VENDOR_ADD = "/vendor/add";
+export const VENDOR_LIST = "/vendor/list";
+export const VENDOR_INFO = "/vendor/info";
+
+// combos
+export const COMBO_LIST = '/combo';

@@ -1,6 +1,6 @@
 import { Box, Grid, Stack, Paper, TextField, FormControlLabel, Switch, Typography, Button } from '@mui/material';
 import { FormikProvider, useFormik, Form } from 'formik'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import * as Yup from 'yup';
 import Page from '../../components/Page';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,9 +10,11 @@ import AutoCompleteField from '../../components/AutoCompleteField';
 import FileUploader from '../../components/FileUploader';
 import { useNavigate } from 'react-router-dom';
 
+const CHAR_LIMIT = 200;
+
 const ProductSchema = Yup.object().shape({
     productName: Yup.string().min(5).max(50).required("Please enter product name"),
-    description: Yup.string().min(2).max(200).required("Please enter product description."),
+    description: Yup.string().min(2).max(CHAR_LIMIT).required("Please enter product description."),
     isActive: Yup.bool()
 });
 
@@ -24,16 +26,29 @@ const combos = [
     { type: 'currency' },
     { type: 'unit' }
 ]
+
 const AddProduct = () => {
-    const { productCategory, brand, packageType, unit, currency, vendor } = useSelector(selectCombos);
+    const { productCategory = [], brand = [], packageType = [], unit = [], currency = [], vendor = [] } = useSelector(selectCombos);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const uploaderRef = useRef(null);
+    const [descCounter, setDescCounter] = useState(CHAR_LIMIT);
 
     const productForm = useFormik({
         initialValues: {
             productName: '',
             description: '',
+            sku: '',
+            upc: '',
+            vendor: '',
+            brand: '',
+            productCategory: '',
+            packageType: '',
+            stock: 0,
+            unit: '',
+            currency: '',
+            salePrice: 0,
+            regularPrice: 0,
             isActive: false
         },
         validationSchema: ProductSchema,
@@ -62,21 +77,22 @@ const AddProduct = () => {
             legend={`New Product`}
             onBackClick={handleGoBack}
         >
-            <Paper sx={{ p: 2 }}>
-                <FormikProvider value={productForm}>
-                    <Box
-                        component={Form}
-                        onSubmit={handleSubmit}
-                        autoComplete="off"
-                        noValidate
-                        sx={
-                            {
-                                width: '100%'
-                            }
+            {/* <Paper sx={{ p: 2 }}> */}
+            <FormikProvider value={productForm}>
+                <Box
+                    component={Form}
+                    onSubmit={handleSubmit}
+                    autoComplete="off"
+                    noValidate
+                    sx={
+                        {
+                            width: '100%'
                         }
-                    >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} md={5} lg={5}>
+                    }
+                >
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={4} lg={4}>
+                            <Paper sx={{ p: 2 }}>
                                 <Stack
                                     spacing={2}
                                 >
@@ -96,10 +112,11 @@ const AddProduct = () => {
                                         Boolean(touched.image && errors.image) ? <Typography variant="body2" color="error">{touched.image && errors.image}</Typography> : null
                                     }
                                 </Stack>
-                            </Grid>
-                            <Grid item xs={12} md={7} lg={7}>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12} md={8} lg={8}>
+                            <Paper sx={{ p: 2 }}>
                                 <Stack
-
                                     spacing={2}
                                 >
                                     <TextField
@@ -107,55 +124,111 @@ const AddProduct = () => {
                                         type="text"
                                         label="Product Name"
                                         size="small"
+                                        name="productName"
                                         {...getFieldProps('productName')}
                                         error={Boolean(touched.productName && errors.productName)}
                                         helperText={touched.productName && errors.productName}
                                     />
-                                    <TextField
-                                        fullWidth
-                                        label="Description"
-                                        multiline
-                                        rows={5}
-                                        {...getFieldProps('description')}
-                                        error={Boolean(touched.description && errors.description)}
-                                        helperText={touched.description && errors.description}
-                                    />
-                                    <AutoCompleteField name="vendor" label="Vendor" options={vendor} size="small" isDefaultRenderer={false} {...getFieldProps('vendor')} />
-                                    <AutoCompleteField name="productCategory" label="Product Category" options={productCategory} size="small" {...getFieldProps('productCategory')} />
-                                    <AutoCompleteField name="packageType" label="PackageType" options={packageType} size="small" {...getFieldProps('packageType')} />
-                                    <AutoCompleteField name="brand" label="Brand" options={brand} size="small" {...getFieldProps('brand')} />
-                                    <AutoCompleteField name="unit" label="Unit" options={unit} size="small" {...getFieldProps('unit')} />
-                                    <AutoCompleteField name="currency" label="Currency" options={currency} size="small" {...getFieldProps('currency')} />
                                     <Stack
-                                        direction="row"
-                                        spacing={1}
+                                        direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row' }}
+                                        spacing={{ xs: 2, sm: 2, md: 1, lg: 1 }}
                                     >
                                         <TextField
                                             fullWidth
-                                            label="Stock"
-                                            name="stock"
+                                            type="text"
+                                            label="SKU"
                                             size="small"
-                                            {...getFieldProps('stock')}
-                                            error={Boolean(touched.stock && errors.stock)}
-                                            helperText={touched.stock && errors.stock}
+                                            name="sku"
+                                            {...getFieldProps('sku')}
+                                            error={Boolean(touched.sku && errors.sku)}
+                                            helperText={touched.sku && errors.sku}
                                         />
                                         <TextField
                                             fullWidth
-                                            label="Stock"
-                                            name="stock"
+                                            type="text"
+                                            label="UPC"
                                             size="small"
-                                            {...getFieldProps('stock')}
-                                            error={Boolean(touched.stock && errors.stock)}
-                                            helperText={touched.stock && errors.stock}
+                                            name='upc'
+                                            {...getFieldProps('upc')}
+                                            error={Boolean(touched.upc && errors.upc)}
+                                            helperText={touched.upc && errors.upc}
                                         />
                                     </Stack>
                                     <Stack
-                                        direction="row"
-                                        spacing={1}
+                                        direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row' }}
+                                        spacing={{ xs: 2, sm: 2, md: 1, lg: 1 }}
+                                    >
+                                        <AutoCompleteField
+                                            fullWidth
+                                            name="vendor"
+                                            label="Vendor"
+                                            options={vendor}
+                                            size="small"
+                                            isDefaultRenderer={false}
+                                            {...getFieldProps('vendor')} />
+                                        <AutoCompleteField
+                                            fullWidth
+                                            name="brand"
+                                            label="Brand"
+                                            options={brand}
+                                            size="small"
+                                            {...getFieldProps('brand')} />
+                                    </Stack>
+                                    <Stack
+                                        direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row' }}
+                                        spacing={{ xs: 2, sm: 2, md: 1, lg: 1 }}
+                                    >
+                                        <AutoCompleteField
+                                            fullWidth
+                                            name="productCategory"
+                                            label="Product Category"
+                                            options={productCategory}
+                                            size="small"
+                                            {...getFieldProps('productCategory')} />
+                                        <AutoCompleteField
+                                            fullWidth
+                                            name="packageType"
+                                            label="Package Type"
+                                            options={packageType}
+                                            size="small"
+                                            {...getFieldProps('packageType')} />
+                                    </Stack>
+                                    <Stack
+                                        direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row' }}
+                                        spacing={{ xs: 2, sm: 2, md: 1, lg: 1 }}
                                     >
                                         <TextField
                                             fullWidth
-                                            label="Regular price"
+                                            label="Stock"
+                                            name="stock"
+                                            size="small"
+                                            {...getFieldProps('stock')}
+                                            error={Boolean(touched.stock && errors.stock)}
+                                            helperText={touched.stock && errors.stock}
+                                        />
+                                        <AutoCompleteField
+                                            fullWidth
+                                            name="unit"
+                                            label="Unit"
+                                            options={unit}
+                                            size="small"
+                                            {...getFieldProps('unit')} />
+
+                                    </Stack>
+                                    <Stack
+                                        direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row' }}
+                                        spacing={{ xs: 2, sm: 2, md: 1, lg: 1 }}
+                                    >
+                                        <AutoCompleteField
+                                            fullWidth
+                                            name="currency"
+                                            label="Currency"
+                                            options={currency}
+                                            size="small"
+                                            {...getFieldProps('currency')} />
+                                        <TextField
+                                            fullWidth
+                                            label="Regular Price"
                                             name="regularPrice"
                                             size="small"
                                             {...getFieldProps('regularPrice')}
@@ -164,7 +237,7 @@ const AddProduct = () => {
                                         />
                                         <TextField
                                             fullWidth
-                                            label="Sale price"
+                                            label="Sale Price"
                                             name="salePrice"
                                             size="small"
                                             {...getFieldProps('salePrice')}
@@ -172,6 +245,22 @@ const AddProduct = () => {
                                             helperText={touched.salePrice && errors.salePrice}
                                         />
                                     </Stack>
+                                    <TextField
+                                        fullWidth
+                                        label="Description"
+                                        multiline
+                                        rows={5}
+                                        name="description"
+                                        {...getFieldProps('description')}
+                                        onChange={(e) => {
+                                            const { value } = e?.target;
+                                            setFieldValue('description', value);
+                                            const descLen = CHAR_LIMIT - (value?.length || 0);
+                                            setDescCounter(descLen);
+                                        }}
+                                        error={Boolean(touched.description && errors.description)}
+                                        helperText={(touched.description && errors.description) || `Character allowed ${descCounter}`}
+                                    />
                                 </Stack>
                                 <Stack
                                     sx={{ mt: 3 }}
@@ -201,11 +290,12 @@ const AddProduct = () => {
                                         Cancel
                                     </Button>
                                 </Stack>
-                            </Grid>
+                            </Paper>
                         </Grid>
-                    </Box>
-                </FormikProvider>
-            </Paper>
+                    </Grid>
+                </Box>
+            </FormikProvider>
+            {/* </Paper> */}
         </Page>
     )
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { refreshToken } from '../storage/actions/authAction';
 import { selectAccessToken } from '../storage/slices/authSlice';
 import AppLoader from './Loader/AppLoader';
@@ -10,6 +10,7 @@ const PersistLogin = () => {
     const [isLoading, setLoading] = useState(true);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         let isMounted = true;
@@ -17,7 +18,7 @@ const PersistLogin = () => {
             try {
                 const { status } = await dispatch(refreshToken())
                 if (status === 401) {
-                    navigate('/login')
+                    navigate('/login', { state: { redirectTo: location } })
                 }
             }
             catch (err) {

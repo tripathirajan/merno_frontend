@@ -7,7 +7,7 @@ import {
     Button,
     Link,
 } from '@mui/material';
-import { NavLink as RouterLink, useNavigate } from 'react-router-dom';
+import { NavLink as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik'
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
@@ -23,6 +23,10 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [errMsg, setErrMsg] = useState('')
+    const location = useLocation();
+    const { state } = location;
+    const { redirectTo = '/dashboard' } = state || {};
+
     const formik = useFormik({
         initialValues: {
             username: '',
@@ -35,7 +39,7 @@ const Login = () => {
             // console.log('login-result', success, message);
             setSubmitting(false)
             if (success) {
-                navigate('/dashboard')
+                navigate(redirectTo);
             } else {
                 setErrMsg(message);
                 setTimeout(() => {

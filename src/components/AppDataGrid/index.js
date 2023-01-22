@@ -246,7 +246,7 @@ const AppDataGrid = ({
                     {...rest}
                 />
                 {
-                    menus?.length && <ContextMenu menus={menus} contextMenu={contextMenu} handleClose={handleClose} selectedRow={selectedRow} />
+                    menus?.length > 0 ? <ContextMenu menus={menus} contextMenu={contextMenu} handleClose={handleClose} selectedRow={selectedRow} /> : null
                 }
             </Box>
         </Stack>

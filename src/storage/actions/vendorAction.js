@@ -44,7 +44,6 @@ export const addVendor = ({
 
         if (image) {
             const formData = new FormData();
-            debugger
             formData.append(
                 "image",
                 image,

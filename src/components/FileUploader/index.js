@@ -69,13 +69,13 @@ Thumbnail.proptypes = {
 }
 
 const FileUploader = forwardRef((props, ref) => {
-    const { name, handleOnChangeFile, sx } = props;
+    const { name, handleOnChangeFile, sx, maxFiles = 1 } = props;
     const [files, setFiles] = useState([]);
     const { getRootProps, getInputProps } = useDropzone({
         accept: {
             'image/*': ['.png', '.jpeg', '.jpg'],
         },
-        maxFiles: 1,
+        maxFiles,
         onDrop: acceptedFiles => {
             const fileList = acceptedFiles.map(file => Object.assign(file, {
                 preview: URL.createObjectURL(file)
@@ -91,8 +91,12 @@ const FileUploader = forwardRef((props, ref) => {
         // eslint-disable-next-line
     }, []);
 
-    const handleImageRemove = (index) => {
+    const handleImageRemove = (index = -1) => {
         if (!files?.length) {
+            return;
+        }
+        if (index === -1) {
+            setFiles([]);
             return;
         }
         const filtered = files.filter((file, row) => row !== index);
@@ -108,8 +112,8 @@ const FileUploader = forwardRef((props, ref) => {
     }, [name, getInputProps]);
 
     useImperativeHandle(ref, () => ({
-        resetImages() {
-            handleImageRemove(-1);
+        resetImages(index) {
+            handleImageRemove(index);
         }
     }));
     return (

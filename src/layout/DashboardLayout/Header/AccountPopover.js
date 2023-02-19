@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Divider, Typography, Stack, MenuItem, Avatar, Button, Popover, Badge } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserInfo } from '../../../storage/slices/authSlice';
@@ -6,6 +6,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { styled } from '@mui/material/styles';
 import useAuth from '../../../contexts/AuthContext';
 import { logoutUser } from '../../../storage/actions/authAction';
+import { useNavigate } from 'react-router-dom';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -36,22 +37,14 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     },
 }));
 
-const MENU_OPTIONS = [
-    {
-        label: 'Home'
-    },
-    {
-        label: 'Profile'
-    },
-    {
-        label: 'Settings'
-    },
-];
+
 
 const AccountPopover = props => {
     const [open, setOpen] = useState(null);
     const { userInfo: { fullName, username, photoURL = '' } } = useAuth();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const handleOpen = (event) => {
         setOpen(event.currentTarget);
     };
@@ -63,6 +56,23 @@ const AccountPopover = props => {
     const handleLogOut = () => {
         dispatch(logoutUser());
     }
+    const menus = useMemo(() => ([
+        {
+            label: 'Profile',
+            onClick: () => {
+                handleClose();
+                navigate('/profile')
+            }
+        },
+        {
+            label: 'Settings',
+            onClick: () => {
+                handleClose();
+                navigate('/settings')
+            }
+        },
+    ]), [navigate]);
+
     return (
         <>
             <Button
@@ -139,8 +149,8 @@ const AccountPopover = props => {
                 }}
             >
                 <Stack sx={{ p: 1 }}>
-                    {MENU_OPTIONS.map((option) => (
-                        <MenuItem key={option.label} onClick={handleClose}>
+                    {menus.map((option) => (
+                        <MenuItem key={option.label} onClick={option.onClick}>
                             {option.label}
                         </MenuItem>
                     ))}

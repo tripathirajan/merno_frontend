@@ -58,6 +58,23 @@ const menus = [
                 icon: 'unit'
             }
         ]
+    },
+    {
+        title: 'My Page',
+        path: '',
+        icon: '',
+        children: [
+            {
+                title: 'Profile',
+                path: '/profile',
+                icon: 'user'
+            },
+            {
+                title: 'Settings',
+                path: '/settings',
+                icon: 'user'
+            }
+        ]
     }
 ]
 

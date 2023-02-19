@@ -18,6 +18,8 @@ import Vendor from "./pages/Vendor";
 import AddVendor from "./pages/Vendor/AddVendor";
 import ViewVendor from "./pages/Vendor/ViewVendor";
 import { AuthProvider } from "./contexts/AuthContext";
+import Profile from "./pages/MyPage/Profile";
+import Settings from "./pages/MyPage/Settings";
 
 function App() {
   return (
@@ -33,11 +35,13 @@ function App() {
         <Route element={<AuthProvider><PersistLogin /> </AuthProvider>}>
           <Route element={<DashboardLayout />}>
             <Route path='dashboard' element={<Dashboard />} />
+            {/* product section */}
             <Route path="product">
               <Route index={true} element={<ProductList />} />
               <Route path="add" element={<AddProduct />} />
               <Route path="edit/:productId" element={<>edit</>} />
             </Route>
+            {/* vendor section */}
             <Route path="vendor">
               <Route index={true} element={<Vendor />} />
               <Route path="add" element={<AddVendor />} />
@@ -49,6 +53,10 @@ function App() {
             <Route path="package-type" element={<PackageType />} />
             <Route path="unit" element={<Unit />} />
             <Route path="currency" element={<Currency />} />
+
+            {/* my-page  */}
+            <Route path="profile" element={<Profile />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
         </Route>
         <Route

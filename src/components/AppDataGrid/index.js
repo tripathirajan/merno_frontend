@@ -8,9 +8,13 @@ import {
     GridToolbarExport,
     GridColumnMenu,
     GridToolbarQuickFilter,
-    GridLinkOperator
+    GridLinkOperator,
+    useGridApiContext,
+    useGridSelector,
+    gridPageCountSelector,
+    gridPageSelector,
 } from '@mui/x-data-grid';
-import { Box, Paper, Stack, Button, Menu, MenuItem, ListItemIcon, ListItemText, IconButton } from '@mui/material';
+import { Box, Paper, Stack, Button, Menu, MenuItem, ListItemIcon, ListItemText, Pagination } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import NoDataFound from '../SvgIcons/NoDataFound';
@@ -125,6 +129,17 @@ const CustomOverlay = () => {
     </StyledGridOverlay>)
 }
 
+const CustomPagination = (props) => {
+    const apiRef = useGridApiContext();
+    const page = useGridSelector(apiRef, gridPageSelector);
+    const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+    return (<Pagination
+        color="primary"
+        count={pageCount}
+        page={page + 1}
+        onChange={(event, value) => apiRef.current.setPage(value - 1)}
+    />)
+}
 const AppDataGrid = ({
     rows,
     columns,
@@ -250,7 +265,8 @@ const AppDataGrid = ({
                         components={{
                             ColumnMenu: StyledGridColumnMenu,
                             NoRowsOverlay: CustomOverlay,
-                            Toolbar: ({ setFilterButtonEl }) => <GridCustomToolbar showAddAction={!readOnly} setFilterButtonEl={setFilterButtonEl} addActionLabel={addActionLabel} handleAddClick={handleAddActionClick} onReload={onReload} />
+                            Toolbar: ({ setFilterButtonEl }) => <GridCustomToolbar showAddAction={!readOnly} setFilterButtonEl={setFilterButtonEl} addActionLabel={addActionLabel} handleAddClick={handleAddActionClick} onReload={onReload} />,
+                            Pagination: CustomPagination
                         }}
                         getCellClassName={(params) => {
                             return params?.field === keyField ? 'primary-col' : '';

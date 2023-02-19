@@ -62,7 +62,7 @@ const columns = [
             if (!id) {
                 return name;
             }
-            return (name && <LinkRenderer text={name} url={`/vendor/view/${id}`} />) || 'N/A';
+            return (name && <LinkRenderer tooltip="click to view vendor" text={name} url={`/vendor/view/${id}`} />) || 'N/A';
         }
     },
     {
@@ -98,6 +98,7 @@ const ProductList = () => {
 
     const handleReloadList = useCallback(() => {
         loadProductList()
+        // eslint-disable-next-line
     }, []);
     return (
         <Page

@@ -7,7 +7,7 @@ import {
     Button,
     Link,
 } from '@mui/material';
-import { NavLink as RouterLink, useNavigate } from 'react-router-dom';
+import { NavLink as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik'
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
@@ -23,6 +23,10 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [errMsg, setErrMsg] = useState('')
+    const location = useLocation();
+    const { state } = location;
+    const { redirectTo = '/dashboard' } = state || {};
+
     const formik = useFormik({
         initialValues: {
             username: '',
@@ -35,7 +39,7 @@ const Login = () => {
             // console.log('login-result', success, message);
             setSubmitting(false)
             if (success) {
-                navigate('/dashboard')
+                navigate(redirectTo);
             } else {
                 setErrMsg(message);
                 setTimeout(() => {
@@ -49,16 +53,16 @@ const Login = () => {
     return (
         <Stack
             direction="column"
-            justifyContent="center"
-            alignItems="center"
             spacing={3}
         >
-            <Typography variant='h4' component="h2" color="secondary">
-                Merno | Login
-            </Typography>
-            <Typography variant='caption' sx={{ color: 'text.secondary' }}>
-                Enter your credentials to continue
-            </Typography>
+            <Box>
+                <Typography variant='h4' color="secondary">
+                    Welcome to MERNO
+                </Typography>
+                <Typography variant='caption' sx={{ color: 'text.secondary', mt: 1 }}>
+                    Sign in to your account
+                </Typography>
+            </Box>
             {
                 errMsg && <AppAlert body={errMsg} />
             }
@@ -111,7 +115,7 @@ const Login = () => {
                     </Stack>
                     <Button
                         fullWidth
-                        size="normal"
+                        size="large"
                         type="submit"
                         variant="contained"
                         color="secondary"

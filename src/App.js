@@ -17,6 +17,7 @@ import Currency from "./pages/Master/Currency";
 import Vendor from "./pages/Vendor";
 import AddVendor from "./pages/Vendor/AddVendor";
 import ViewVendor from "./pages/Vendor/ViewVendor";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
           <Route path="changePassword/:token" element={<ChangePassword />} />
           <Route index element={<Navigate to="/login" replace />} />
         </Route>
-        <Route element={<PersistLogin />}>
+        <Route element={<AuthProvider><PersistLogin /> </AuthProvider>}>
           <Route element={<DashboardLayout />}>
             <Route path='dashboard' element={<Dashboard />} />
             <Route path="product">
@@ -60,6 +61,7 @@ function App() {
         element={<h3>404 Not Found!</h3>}
       />
     </Routes>
+
   );
 }
 

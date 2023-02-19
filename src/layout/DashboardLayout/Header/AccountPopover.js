@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Divider, Typography, Stack, MenuItem, Avatar, Button, Popover, Badge } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectUserInfo } from '../../../storage/slices/authSlice';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { styled } from '@mui/material/styles';
+import useAuth from '../../../contexts/AuthContext';
+import { logoutUser } from '../../../storage/actions/authAction';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -48,7 +50,8 @@ const MENU_OPTIONS = [
 
 const AccountPopover = props => {
     const [open, setOpen] = useState(null);
-    const { fullName, username, photoURL = '' } = useSelector(selectUserInfo);
+    const { userInfo: { fullName, username, photoURL = '' } } = useAuth();
+    const dispatch = useDispatch()
     const handleOpen = (event) => {
         setOpen(event.currentTarget);
     };
@@ -57,6 +60,9 @@ const AccountPopover = props => {
         setOpen(null);
     };
 
+    const handleLogOut = () => {
+        dispatch(logoutUser());
+    }
     return (
         <>
             <Button
@@ -142,7 +148,7 @@ const AccountPopover = props => {
 
                 <Divider sx={{ borderStyle: 'dashed' }} />
 
-                <MenuItem onClick={handleClose} sx={{ m: 1 }}>
+                <MenuItem onClick={handleLogOut} sx={{ m: 1 }}>
                     Logout
                 </MenuItem>
             </Popover>

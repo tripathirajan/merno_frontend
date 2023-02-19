@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDropzone } from 'react-dropzone';
-import { Box, Typography, Stack, styled, IconButton } from '@mui/material';
+import { Box, Typography, Stack, styled, IconButton, FormHelperText } from '@mui/material';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 
 
@@ -69,13 +69,13 @@ Thumbnail.proptypes = {
 }
 
 const FileUploader = forwardRef((props, ref) => {
-    const { name, handleOnChangeFile, sx } = props;
+    const { name, handleOnChangeFile, sx, error = false, helperText = '', maxFiles = 1 } = props;
     const [files, setFiles] = useState([]);
     const { getRootProps, getInputProps } = useDropzone({
         accept: {
             'image/*': ['.png', '.jpeg', '.jpg'],
         },
-        maxFiles: 1,
+        maxFiles,
         onDrop: acceptedFiles => {
             const fileList = acceptedFiles.map(file => Object.assign(file, {
                 preview: URL.createObjectURL(file)
@@ -91,8 +91,12 @@ const FileUploader = forwardRef((props, ref) => {
         // eslint-disable-next-line
     }, []);
 
-    const handleImageRemove = (index) => {
+    const handleImageRemove = (index = -1) => {
         if (!files?.length) {
+            return;
+        }
+        if (index === -1) {
+            setFiles([]);
             return;
         }
         const filtered = files.filter((file, row) => row !== index);
@@ -108,11 +112,11 @@ const FileUploader = forwardRef((props, ref) => {
     }, [name, getInputProps]);
 
     useImperativeHandle(ref, () => ({
-        resetImages() {
-            handleImageRemove(-1);
+        resetImages(index) {
+            handleImageRemove(index);
         }
     }));
-    return (
+    return (<>
         <StyledContainer
             direction="column"
             component="section"
@@ -138,6 +142,8 @@ const FileUploader = forwardRef((props, ref) => {
                 }
             </Box>
         </StyledContainer>
+        <FormHelperText error={error}>{helperText}</FormHelperText>
+    </>
     )
 })
 

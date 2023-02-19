@@ -2,14 +2,18 @@ import React, { forwardRef } from 'react'
 import PropTypes from 'prop-types'
 import { Autocomplete, TextField, Box, Typography, Stack, Avatar } from '@mui/material'
 
-const AutoCompleteField = forwardRef(({ name, label, options, isDefaultRenderer = true, ...rest }, ref) => {
+const AutoCompleteField = forwardRef(({ name, label, options, isDefaultRenderer = true, value, error = false, helperText = '', ...rest }, ref) => {
+    if (name === 'vendor') {
+        //console.log('onchange', rest.onChange)
+    }
+
     if (isDefaultRenderer) {
         return (<Autocomplete
             ref={ref}
-            disablePortal
-            id="combo-box-demo"
+            disablePortal={false}
             options={options}
-            renderInput={(params) => <TextField {...params} label={label} />}
+            renderInput={(params) => <TextField name={name} {...params} label={label} error={error}
+                helperText={helperText} />}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             {...rest}
         />)
@@ -19,15 +23,19 @@ const AutoCompleteField = forwardRef(({ name, label, options, isDefaultRenderer 
             ref={ref}
             options={options}
             getOptionLabel={(option) => option.label}
-            disablePortal
+            disablePortal={false}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             renderInput={(params) => (
                 <TextField
+                    name={name}
                     {...params}
                     label={label || `Select ${name}...`}
+                    error={error}
+                    helperText={helperText}
                     inputProps={{
                         ...params.inputProps,
                         autoComplete: 'combo',
+                        name
                     }}
                 />
             )}
@@ -64,4 +72,4 @@ AutoCompleteField.propTypes = {
     options: PropTypes.array.isRequired
 }
 
-export default AutoCompleteField;
+export default React.memo(AutoCompleteField);

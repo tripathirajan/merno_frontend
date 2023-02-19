@@ -27,7 +27,7 @@ export const StyledNavItem = styled((props) => <ListItemButton disableGutters {.
         backgroundColor: theme.palette.primary.main
     },
     '&.active': {
-        color: theme.palette.secondary.main,
+        color: theme.palette.primary.main,
         backgroundColor: theme.palette.action.selected,
         fontWeight: theme.typography.fontWeightMedium
     },

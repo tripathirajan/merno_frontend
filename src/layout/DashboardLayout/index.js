@@ -4,9 +4,6 @@ import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import SideNav from './SideNav';
 import { HEADER_DESKTOP, HEADER_MOBILE } from '../../constants';
-import PageLoader from '../../components/Loader/PageLoader';
-import { useSelector } from 'react-redux';
-import { selectPageLoading } from '../../storage/slices/uiSlices';
 
 
 const RootStyle = styled('div')({
@@ -31,12 +28,8 @@ const MainStyle = styled('main')(({ theme }) => ({
 
 const DashboardLayout = () => {
     const [open, setOpen] = useState(false);
-    const isLoading = useSelector(selectPageLoading);
     return (
         <RootStyle>
-            {
-                isLoading && <PageLoader />
-            }
             <Header title="Mernodico" onClickMenu={() => setOpen(prevState => !prevState)} />
             <SideNav openNav={open} onCloseNav={() => setOpen(false)} />
             <MainStyle>

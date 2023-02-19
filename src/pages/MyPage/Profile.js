@@ -29,14 +29,14 @@ const Profile = () => {
                             spacing={2}
                         >
                             <ProfilePicPreview
-                                src={'http://res.cloudinary.com/dwwhstsge/image/upload/v1676779661/63f1a087a7f59d155b0c3cfa.jpg'}
+                                src={photoURL}
                             />
                             <Stack
                                 direction={'column'}
                                 alignItems={'center'}
                                 justifyContent={'center'}
                             >
-                                <Typography variant="subtitle2" color="secondary" noWrap>
+                                <Typography variant="h6" color="secondary" noWrap>
                                     {fullName}
                                 </Typography>
                                 <Typography variant="caption" sx={{ color: 'text.secondary', textTransform: 'lowercase' }} noWrap>

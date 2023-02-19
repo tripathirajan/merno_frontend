@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Paper, TextField, FormControlLabel, Switch, Typography, Button } from '@mui/material';
+import { Box, Grid, Stack, Paper, TextField, FormControlLabel, Switch, Typography, Button, FormHelperText } from '@mui/material';
 import { FormikProvider, useFormik, Form } from 'formik'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import * as Yup from 'yup';
@@ -10,14 +10,26 @@ import AutoCompleteField from '../../components/AutoCompleteField';
 import FileUploader from '../../components/FileUploader';
 import { useNavigate } from 'react-router-dom';
 import { addNewProduct } from '../../storage/actions/productAction';
-import { ALERT_TYPE_ERROR, ALERT_TYPE_SUCCESS } from '../../constants';
+import Toaster, { toastType } from '../../components/Toaster';
 
 const CHAR_LIMIT = 200;
 
 const ProductSchema = Yup.object().shape({
     productName: Yup.string().min(5).max(50).required("Please enter product name"),
     description: Yup.string().min(2).max(CHAR_LIMIT).required("Please enter product description."),
-    isActive: Yup.bool()
+    sku: Yup.string().max(50).required("Enter product SKU"),
+    upc: Yup.string().max(50).required("Enter product UPC"),
+    vendor: Yup.string().required("Select product vendor"),
+    brand: Yup.string().required("Select product brand"),
+    productCategory: Yup.string().required("Select product category"),
+    packageType: Yup.string().required("Select product package type"),
+    stock: Yup.number().min(1).required("Enter the product in stock"),
+    unit: Yup.string().required("Select Unit for measurement"),
+    currency: Yup.string().required("Select currency"),
+    salePrice: Yup.number().min(1).required("Enter the sale price of product."),
+    regularPrice: Yup.number().min(1).required("Enter the regular/vendor price of product."),
+    isActive: Yup.bool(),
+    image: Yup.mixed().required('Product Image is mandatory.')
 });
 
 const combos = [
@@ -28,7 +40,7 @@ const combos = [
     { type: 'currency' },
     { type: 'unit' }
 ]
-const alertInititialValue = { show: false, body: '', severity: ALERT_TYPE_ERROR };
+const alertInititialValue = { show: false, message: '', type: toastType.default };
 const AddProduct = () => {
     const { productCategory = [], brand = [], packageType = [], unit = [], currency = [], vendor = [] } = useSelector(selectCombos);
     const dispatch = useDispatch();
@@ -47,24 +59,25 @@ const AddProduct = () => {
             brand: '',
             productCategory: '',
             packageType: '',
-            stock: 0,
+            stock: 1,
             unit: '',
             currency: '',
-            salePrice: 0,
-            regularPrice: 0,
-            isActive: false
+            salePrice: 1,
+            regularPrice: 1,
+            isActive: true
         },
         validationSchema: ProductSchema,
-        onSubmit: async (values, { setSubmitting }) => {
+        onSubmit: async (values, { resetForm, setSubmitting }) => {
             if (!values) return false;
 
             const { success, message } = await dispatch(addNewProduct(values));
             if (success) {
-                setAppAlert({ show: true, body: message, severity: ALERT_TYPE_SUCCESS })
-                // resetForm();
+                setAppAlert({ show: true, message: "Product created successfully.", type: toastType.success })
+                resetForm();
+                setFieldValue("image", null);
                 uploaderRef?.current?.resetImages();
             } else {
-                setAppAlert({ show: true, body: message, severity: ALERT_TYPE_ERROR });
+                setAppAlert({ show: true, message, type: toastType.error });
             }
             setSubmitting(false);
         }
@@ -80,17 +93,19 @@ const AddProduct = () => {
         navigate('/product');
     }
 
+    const handleAlertClose = () => {
+        setAppAlert(alertInititialValue)
+    }
     useEffect(() => {
         loadCombos();
     }, [loadCombos]);
-
     return (
         <Page
             title="Products | Merno"
             legend={`New Product`}
             onBackClick={handleGoBack}
         >
-            {/* <Paper sx={{ p: 2 }}> */}
+            <Toaster open={appAlert.show} horizontal="right" message={appAlert.message} type={appAlert.type} handleClose={handleAlertClose} />
             <FormikProvider value={productForm}>
                 <Box
                     component={Form}
@@ -117,13 +132,12 @@ const AddProduct = () => {
                                     <FileUploader
                                         ref={uploaderRef}
                                         name="image"
+                                        error={Boolean(errors.image)}
+                                        helperText={errors.image}
                                         handleOnChangeFile={(files) => {
                                             setFieldValue("image", files && files[0]);
                                         }}
                                     />
-                                    {
-                                        Boolean(touched.image && errors.image) ? <Typography variant="body2" color="error">{touched.image && errors.image}</Typography> : null
-                                    }
                                 </Stack>
                             </Paper>
                         </Grid>
@@ -182,6 +196,8 @@ const AddProduct = () => {
                                             onChange={(e, { id }) => {
                                                 setFieldValue('vendor', id)
                                             }}
+                                            error={Boolean(touched.vendor && errors.vendor)}
+                                            helperText={touched.vendor && errors.vendor}
 
                                         />
                                         <AutoCompleteField
@@ -194,6 +210,8 @@ const AddProduct = () => {
                                             onChange={(e, { id }) => {
                                                 setFieldValue('brand', id)
                                             }}
+                                            error={Boolean(touched.brand && errors.brand)}
+                                            helperText={touched.brand && errors.brand}
                                         />
                                     </Stack>
                                     <Stack
@@ -210,6 +228,8 @@ const AddProduct = () => {
                                             onChange={(e, { id }) => {
                                                 setFieldValue('productCategory', id)
                                             }}
+                                            error={Boolean(touched.productCategory && errors.productCategory)}
+                                            helperText={touched.productCategory && errors.productCategory}
                                         />
                                         <AutoCompleteField
                                             fullWidth
@@ -221,6 +241,8 @@ const AddProduct = () => {
                                             onChange={(e, { id }) => {
                                                 setFieldValue('packageType', id)
                                             }}
+                                            error={Boolean(touched.packageType && errors.packageType)}
+                                            helperText={touched.packageType && errors.packageType}
                                         />
                                     </Stack>
                                     <Stack
@@ -246,6 +268,8 @@ const AddProduct = () => {
                                             onChange={(e, { id }) => {
                                                 setFieldValue('unit', id)
                                             }}
+                                            error={Boolean(touched.unit && errors.unit)}
+                                            helperText={touched.unit && errors.unit}
                                         />
 
                                     </Stack>
@@ -263,6 +287,8 @@ const AddProduct = () => {
                                             onChange={(e, { id }) => {
                                                 setFieldValue('currency', id)
                                             }}
+                                            error={Boolean(touched.currency && errors.currency)}
+                                            helperText={touched.currency && errors.currency}
                                         />
                                         <TextField
                                             fullWidth
@@ -309,7 +335,6 @@ const AddProduct = () => {
                                 >
                                     <Button
                                         fullWidth
-                                        size="medium"
                                         type="submit"
                                         variant="contained"
                                         color="secondary"
@@ -319,7 +344,6 @@ const AddProduct = () => {
                                     </Button>
                                     <Button
                                         fullWidth
-                                        size="medium"
                                         type="button"
                                         variant="text"
                                         onClick={handleGoBack}
@@ -333,7 +357,6 @@ const AddProduct = () => {
                     </Grid>
                 </Box>
             </FormikProvider>
-            {/* </Paper> */}
         </Page>
     )
 }

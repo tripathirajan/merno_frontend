@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react'
 import PropTypes from 'prop-types'
 import { Autocomplete, TextField, Box, Typography, Stack, Avatar } from '@mui/material'
 
-const AutoCompleteField = forwardRef(({ name, label, options, isDefaultRenderer = true, value, ...rest }, ref) => {
+const AutoCompleteField = forwardRef(({ name, label, options, isDefaultRenderer = true, value, error = false, helperText = '', ...rest }, ref) => {
     if (name === 'vendor') {
         //console.log('onchange', rest.onChange)
     }
@@ -12,7 +12,8 @@ const AutoCompleteField = forwardRef(({ name, label, options, isDefaultRenderer 
             ref={ref}
             disablePortal={false}
             options={options}
-            renderInput={(params) => <TextField name={name} {...params} label={label} />}
+            renderInput={(params) => <TextField name={name} {...params} label={label} error={error}
+                helperText={helperText} />}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             {...rest}
         />)
@@ -29,6 +30,8 @@ const AutoCompleteField = forwardRef(({ name, label, options, isDefaultRenderer 
                     name={name}
                     {...params}
                     label={label || `Select ${name}...`}
+                    error={error}
+                    helperText={helperText}
                     inputProps={{
                         ...params.inputProps,
                         autoComplete: 'combo',

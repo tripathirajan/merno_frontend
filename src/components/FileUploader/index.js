@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDropzone } from 'react-dropzone';
-import { Box, Typography, Stack, styled, IconButton } from '@mui/material';
+import { Box, Typography, Stack, styled, IconButton, FormHelperText } from '@mui/material';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 
 
@@ -69,7 +69,7 @@ Thumbnail.proptypes = {
 }
 
 const FileUploader = forwardRef((props, ref) => {
-    const { name, handleOnChangeFile, sx, maxFiles = 1 } = props;
+    const { name, handleOnChangeFile, sx, error = false, helperText = '', maxFiles = 1 } = props;
     const [files, setFiles] = useState([]);
     const { getRootProps, getInputProps } = useDropzone({
         accept: {
@@ -116,7 +116,7 @@ const FileUploader = forwardRef((props, ref) => {
             handleImageRemove(index);
         }
     }));
-    return (
+    return (<>
         <StyledContainer
             direction="column"
             component="section"
@@ -142,6 +142,8 @@ const FileUploader = forwardRef((props, ref) => {
                 }
             </Box>
         </StyledContainer>
+        <FormHelperText error={error}>{helperText}</FormHelperText>
+    </>
     )
 })
 

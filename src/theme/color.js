@@ -11,7 +11,7 @@ export const WHITE = '#FFFFFF';
 export const BLUE_MAIN = '#5A81FA';
 export const BLUE_DARK = '#2C3D8F';
 export const BLUE_LIGHT = '#CDDEFF';
-export const BLUE_LIGHTER = '#F2F5FF';
+export const BLUE_LIGHTER = '#f3f6f9'; //'#F2F5FF';
 
 //black
 export const BLACK = '#1F1F1F';

@@ -1,45 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { refreshToken } from '../storage/actions/authAction';
-import { selectAccessToken } from '../storage/slices/authSlice';
 import AppLoader from './Loader/AppLoader';
+import useAuth from '../contexts/AuthContext';
 
 const PersistLogin = () => {
-    const token = useSelector(selectAccessToken)
-    const [isLoading, setLoading] = useState(true);
-    const dispatch = useDispatch();
+    const { isloading, userInfo } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
-    useEffect(() => {
-        let isMounted = true;
-        const verifyRefreshToken = async () => {
-            try {
-                const { status } = await dispatch(refreshToken())
-                if (status === 401) {
-                    navigate('/login', { state: { redirectTo: location } })
-                }
-            }
-            catch (err) {
-                console.error(err);
-            }
-            finally {
-                isMounted && setLoading(false);
-            }
-        }
-        !token ? verifyRefreshToken() : setLoading(false);
+    if (isloading) {
+        return (<AppLoader />);
+    }
+    if (!isloading && !userInfo?.accessToken) {
+        navigate('/login', { state: { redirectTo: location } });
+    }
 
-        return () => isMounted = false;
-        // eslint-disable-next-line
-    }, [])
-
-    return (<>
-        {
-            (isLoading && <AppLoader />) || <Outlet />
-        }
-    </>
-    )
+    return <Outlet />
 }
 
 export default PersistLogin

@@ -10,13 +10,16 @@ import {
     GridToolbarQuickFilter,
     GridLinkOperator
 } from '@mui/x-data-grid';
-import { Box, Paper, Stack, Button, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, Paper, Stack, Button, Menu, MenuItem, ListItemIcon, ListItemText, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import NoDataFound from '../SvgIcons/NoDataFound';
 import MasterForm from '../MasterForm';
 import icons from '../../config/icons';
-
+import PageLoader from '../Loader/PageLoader';
+import { useSelector } from 'react-redux';
+import { selectPageLoading } from '../../storage/slices/uiSlices';
+import RefreshTwoToneIcon from '@mui/icons-material/RefreshTwoTone';
 
 const StyledGridOverlay = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -83,8 +86,7 @@ const StyledGridColumnMenu = styled(GridColumnMenu)(({ theme }) => ({
     fontSize: '0.8rem'
 }))
 
-const GridCustomToolbar = React.memo(({ showAddAction, handleAddClick, addActionLabel }) => {
-    // console.log('GridCustomToolbar')
+const GridCustomToolbar = React.memo(({ showAddAction, handleAddClick, addActionLabel, onReload }) => {
     return (
         <GridToolbarContainer sx={{ padding: 1 }}>
             <GridToolbarQuickFilter
@@ -92,7 +94,14 @@ const GridCustomToolbar = React.memo(({ showAddAction, handleAddClick, addAction
                 size='small'
                 color="secondary"
             />
-            <Box sx={{ flexGrow: 1 }} />
+            <Box sx={{ flexGrow: 1 }} />{
+                onReload && <Button
+                    color='secondary'
+                    variant="text"
+                    startIcon={<RefreshTwoToneIcon />}
+                    onClick={onReload}
+                >Reload</Button>
+            }
             <GridToolbarFilterButton color="secondary" sx={{ ml: 1 }} />
             <GridToolbarExport color="secondary" sx={{ ml: 1 }} />
             {
@@ -131,12 +140,14 @@ const AppDataGrid = ({
     onAddClick,
     readOnly = false,
     menus = [],
+    onReload,
     ...rest }) => {
 
     const [editData, setEditData] = useState({});
     const [openModal, setOpenModal] = useState(false);
     const [contextMenu, setContextMenu] = React.useState(null);
     const [selectedRow, setSelectedRow] = React.useState();
+    const isLoading = useSelector(selectPageLoading);
 
     const handleRowDoubleClick = (params, event) => {
         if (disableForm) {
@@ -221,32 +232,36 @@ const AppDataGrid = ({
         componentProps.row["onContextMenu"] = handleContextMenu;
         componentProps.row["style"] = { cursor: 'context-menu' };
     }
+
     return (<>
         <Stack
             direction="column"
             spacing={1}
         >
             <Box component={Paper} sx={{ height: '75vh', width: '100%', p: 0 }} elevation={0}>
-                <StyledDataGrid
-                    disableSelectionOnClick={true}
-                    checkboxSelection={true}
-                    rows={rowsWithSN}
-                    columns={columnsWithSN}
-                    density="comfortable"
-                    componentsProps={componentProps}
-                    components={{
-                        ColumnMenu: StyledGridColumnMenu,
-                        NoRowsOverlay: CustomOverlay,
-                        Toolbar: ({ setFilterButtonEl }) => <GridCustomToolbar showAddAction={!readOnly} setFilterButtonEl={setFilterButtonEl} addActionLabel={addActionLabel} handleAddClick={handleAddActionClick} />
-                    }}
-                    getCellClassName={(params) => {
-                        return params?.field === keyField ? 'primary-col' : '';
-                    }}
-                    onRowDoubleClick={handleRowDoubleClick}
-                    {...rest}
-                />
-                {
-                    menus?.length > 0 ? <ContextMenu menus={menus} contextMenu={contextMenu} handleClose={handleClose} selectedRow={selectedRow} /> : null
+                {isLoading ? <PageLoader /> : <>
+                    <StyledDataGrid
+                        disableSelectionOnClick={true}
+                        checkboxSelection={true}
+                        rows={rowsWithSN}
+                        columns={columnsWithSN}
+                        density="comfortable"
+                        componentsProps={componentProps}
+                        components={{
+                            ColumnMenu: StyledGridColumnMenu,
+                            NoRowsOverlay: CustomOverlay,
+                            Toolbar: ({ setFilterButtonEl }) => <GridCustomToolbar showAddAction={!readOnly} setFilterButtonEl={setFilterButtonEl} addActionLabel={addActionLabel} handleAddClick={handleAddActionClick} onReload={onReload} />
+                        }}
+                        getCellClassName={(params) => {
+                            return params?.field === keyField ? 'primary-col' : '';
+                        }}
+                        onRowDoubleClick={handleRowDoubleClick}
+                        {...rest}
+                    />
+                    {
+                        menus?.length > 0 ? <ContextMenu menus={menus} contextMenu={contextMenu} handleClose={handleClose} selectedRow={selectedRow} /> : null
+                    }
+                </>
                 }
             </Box>
         </Stack>

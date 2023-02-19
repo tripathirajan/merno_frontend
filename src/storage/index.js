@@ -16,9 +16,9 @@ const store = configureStore({
         master: masterReducer,
         vendor: vendorReducer,
         combos: comboReducer,
-        products: productReducer
+        product: productReducer
     },
-    middleware: getDefaultMiddleware => isDev ? getDefaultMiddleware().concat(reduxLogger) : getDefaultMiddleware(),
+    middleware: getDefaultMiddleware => isDev ? getDefaultMiddleware() : getDefaultMiddleware(),
     devTools: isDev
 });
 

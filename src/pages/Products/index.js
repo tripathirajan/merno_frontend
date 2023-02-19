@@ -1,36 +1,104 @@
 import { Stack } from '@mui/material'
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import AppDataGrid from '../../components/AppDataGrid'
 import Page from '../../components/Page'
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetProductList, selectProductList } from '../../storage/slices/productSlice';
+import { getProductList } from '../../storage/actions/productAction';
+import DateTimeRenderer from '../../components/Renderer/DateTimeRenderer';
+import ProfileRenderer from '../../components/Renderer/ProfileRenderer';
+import ActiveInactive from '../../components/Renderer/ActiveInactive';
+import LinkRenderer from '../../components/Renderer/LinkRenderer';
 
-const rows = [
-    { id: 1, col1: 'Hello', col2: 'World', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 2, col1: 'DataGridPro', col2: 'is Awesome', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 3, col1: 'MUI', col2: 'is Amazing', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 4, col1: 'MUI', col2: 'is Amazing', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 5, col1: 'MUI', col2: 'is Amazing', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 6, col1: 'MUI', col2: 'is Amazing', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 7, col1: 'MUI', col2: 'is Amazing', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 8, col1: 'MUI', col2: 'is Amazing', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 9, col1: 'MUI', col2: 'is Amazing', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 10, col1: 'MUI', col2: 'is Amazing', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 11, col1: 'MUI', col2: 'is Amazing', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 12, col1: 'MUI', col2: 'is Amazing', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 13, col1: 'MUI', col2: 'is Amazing', col3: '23', col4: 'wewe', col5: 'df' },
-    { id: 14, col1: 'MUI', col2: 'is Amazing', col3: '23', col4: 'wewe', col5: 'df' },
-];
+
 const columns = [
-    { field: 'col1', headerName: 'Product', width: 150 },
-    { field: 'col2', headerName: 'SKU', width: 150 },
-    { field: 'col3', headerName: 'UPC', width: 150 },
-    { field: 'col4', headerName: 'CODE', width: 150 },
-    { field: 'col5', headerName: 'Category', width: 150 },
+    {
+        field: 'productName', headerName: 'Product', width: 300,
+        renderCell: ({ row }) => {
+            const { id, productName, sku, image } = row;
+            return <ProfileRenderer title={productName} img={image} subtitle1={sku} redirectURL={`view/${id}`} />
+        }
+    },
+    { field: 'upc', headerName: 'UPC', width: 150 },
+    { field: 'isActive', headerName: 'Status', width: 100, type: 'boolean', renderCell: ActiveInactive },
+    {
+        field: 'brand', headerName: 'Brand', width: 150,
+        renderCell: ({ row }) => {
+            return row?.brand?.name || 'N/A';
+        }
+    },
+    {
+        field: 'productCategory', headerName: 'Category', width: 150,
+        renderCell: ({ row }) => {
+            return row?.productCategory?.name || 'N/A';
+        }
+    },
+    {
+        field: 'stock', headerName: 'Stock', width: 150, type: 'number',
+        renderCell: ({ row }) => {
+            return `${row?.stock} ${row?.unit?.name}` || 'N/A';
+        }
+    },
+    {
+        field: 'regularPrice', headerName: 'Regular Price', width: 150, type: 'number',
+        renderCell: ({ row }) => {
+            const { regularPrice, currency: { name } } = row;
+            return `${regularPrice} ${name}` || 'N/A';
+        }
+    },
+    {
+        field: 'salePrice', headerName: 'Sale Price', width: 150, type: 'number',
+        renderCell: ({ row }) => {
+            const { salePrice, currency: { name } } = row;
+            return `${salePrice} ${name}` || 'N/A';
+        }
+    },
+    {
+        field: 'vendor', headerName: 'Vendor', width: 150,
+        renderCell: ({ row }) => {
+            const { vendor } = row || {};
+            const { name, _id: id } = vendor;
+            if (!id) {
+                return name;
+            }
+            return (name && <LinkRenderer text={name} url={`/vendor/view/${id}`} />) || 'N/A';
+        }
+    },
+    {
+        field: 'createdBy', headerName: 'Created By', width: 150,
+        renderCell: ({ row }) => {
+            return row?.createdBy?.fullName || 'N/A';
+        }
+    },
+    { field: 'createdAt', headerName: 'Created On', width: 160, type: 'dateTime', renderCell: DateTimeRenderer },
+    {
+        field: 'updatedBy', headerName: 'Last Modified By', width: 150,
+        renderCell: ({ row }) => {
+            return row?.updatedBy?.fullName || 'N/A';
+        }
+    },
+    { field: 'updatedAt', headerName: 'Last Modified On', width: 160, type: 'dateTime', renderCell: DateTimeRenderer },
 ];
 
 const ProductList = () => {
-    const navigate = useNavigate();
+    const { items } = useSelector(selectProductList);
 
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const loadProductList = useCallback(() => {
+        dispatch(getProductList())
+        // eslint-disable-next-line
+    }, []);
+
+    useEffect(() => {
+        loadProductList();
+        return () => dispatch(resetProductList());
+    }, [loadProductList, dispatch]);
+
+    const handleReloadList = useCallback(() => {
+        loadProductList()
+    }, []);
     return (
         <Page
             title="Products | Merno"
@@ -41,13 +109,14 @@ const ProductList = () => {
                 spacing={1}
             >
                 <AppDataGrid
-                    rows={rows}
+                    rows={items}
                     columns={columns}
                     disableForm={true}
                     addActionLabel="Add Product"
                     onAddClick={() => {
                         navigate('add')
                     }}
+                    onReload={handleReloadList}
                 />
             </Stack>
         </Page>

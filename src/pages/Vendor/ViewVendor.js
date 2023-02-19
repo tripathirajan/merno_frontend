@@ -45,7 +45,7 @@ const ViewVendor = () => {
     const { label, labelColor } = status[isActive ? "success" : "error"];
 
     const handleGoBack = () => {
-        navigate('/vendor');
+        navigate(-1);
     }
     const loadVendorInfo = useCallback(() => {
         dispatch(getVendorInfo(vendorId));

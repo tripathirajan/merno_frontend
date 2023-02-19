@@ -4,6 +4,8 @@ import store from '../storage';
 import { logoutUser, refreshToken } from '../storage/actions/authAction';
 import { setPageLoadingOFF, setPageLoadingON } from '../storage/slices/uiSlices';
 
+const dispatch = store.dispatch;
+
 // for public requests
 export const httpClientPublic = axios.create({
     baseURL: API_BASE_URL,
@@ -25,7 +27,7 @@ const httpClient = axios.create({
 });
 
 httpClient.interceptors.request.use(function (config) {
-    store.dispatch(setPageLoadingON());
+    dispatch(setPageLoadingON());
     // modifying request
     const accessToken = store.getState()?.auth?.accessToken;
     if (accessToken) {
@@ -33,30 +35,26 @@ httpClient.interceptors.request.use(function (config) {
     }
     return config
 }, function (error) {
-    store.dispatch(setPageLoadingOFF());
+    dispatch(setPageLoadingOFF());
     // request error
     console.error("Request Error: ", error);
 }
 );
 
 httpClient.interceptors.response.use(response => {
-    store.dispatch(setPageLoadingOFF());
+    dispatch(setPageLoadingOFF());
     return response;
 }, async function (error) {
-    store.dispatch(setPageLoadingOFF());
+    dispatch(setPageLoadingOFF());
     // response error handling globally
     const prevRequest = error?.config;
-    if (error?.response?.status === HTTP_CODE_UNAUTHORIZED && prevRequest?.url === REFRESH_URL) {
-        await store.dispatch(logoutUser());
-        return error?.response;
-    }
     if (error?.response?.status === HTTP_CODE_UNAUTHORIZED && prevRequest?.url !== REFRESH_URL) {
-        await store.dispatch(refreshToken());
+        await dispatch(refreshToken());
         const accessToken = store.getState()?.auth?.accessToken;
         prevRequest.headers["Authorization"] = `Bearer ${accessToken}`;
         return await httpClient[prevRequest.method](prevRequest?.url, prevRequest.headers);
     }
-
     return { status: error?.response?.status, data: error?.response?.data }
-})
+});
+
 export default httpClient;

@@ -18,7 +18,7 @@ const Loader = () => {
                     variant="outlined"
                 >
                     <Stack
-                        direction="column"
+                        direction="row"
                         justifyContent="center"
                         alignItems="center"
                         spacing={2}

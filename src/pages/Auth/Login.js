@@ -53,16 +53,16 @@ const Login = () => {
     return (
         <Stack
             direction="column"
-            justifyContent="center"
-            alignItems="center"
             spacing={3}
         >
-            <Typography variant='h4' component="h2" color="secondary">
-                Merno | Login
-            </Typography>
-            <Typography variant='caption' sx={{ color: 'text.secondary' }}>
-                Enter your credentials to continue
-            </Typography>
+            <Box>
+                <Typography variant='h4' color="secondary">
+                    Welcome to MERNO
+                </Typography>
+                <Typography variant='caption' sx={{ color: 'text.secondary', mt: 1 }}>
+                    Sign in to your account
+                </Typography>
+            </Box>
             {
                 errMsg && <AppAlert body={errMsg} />
             }
@@ -115,7 +115,7 @@ const Login = () => {
                     </Stack>
                     <Button
                         fullWidth
-                        size="normal"
+                        size="large"
                         type="submit"
                         variant="contained"
                         color="secondary"

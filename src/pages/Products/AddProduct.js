@@ -9,6 +9,8 @@ import { getCombos } from '../../storage/actions/comboAction';
 import AutoCompleteField from '../../components/AutoCompleteField';
 import FileUploader from '../../components/FileUploader';
 import { useNavigate } from 'react-router-dom';
+import { addNewProduct } from '../../storage/actions/productAction';
+import { ALERT_TYPE_ERROR, ALERT_TYPE_SUCCESS } from '../../constants';
 
 const CHAR_LIMIT = 200;
 
@@ -26,13 +28,14 @@ const combos = [
     { type: 'currency' },
     { type: 'unit' }
 ]
-
+const alertInititialValue = { show: false, body: '', severity: ALERT_TYPE_ERROR };
 const AddProduct = () => {
     const { productCategory = [], brand = [], packageType = [], unit = [], currency = [], vendor = [] } = useSelector(selectCombos);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const uploaderRef = useRef(null);
     const [descCounter, setDescCounter] = useState(CHAR_LIMIT);
+    const [appAlert, setAppAlert] = useState(alertInititialValue)
 
     const productForm = useFormik({
         initialValues: {
@@ -53,7 +56,17 @@ const AddProduct = () => {
         },
         validationSchema: ProductSchema,
         onSubmit: async (values, { setSubmitting }) => {
+            if (!values) return false;
 
+            const { success, message } = await dispatch(addNewProduct(values));
+            if (success) {
+                setAppAlert({ show: true, body: message, severity: ALERT_TYPE_SUCCESS })
+                // resetForm();
+                uploaderRef?.current?.resetImages();
+            } else {
+                setAppAlert({ show: true, body: message, severity: ALERT_TYPE_ERROR });
+            }
+            setSubmitting(false);
         }
     })
     // eslint-disable-next-line
@@ -159,20 +172,29 @@ const AddProduct = () => {
                                         spacing={{ xs: 2, sm: 2, md: 1, lg: 1 }}
                                     >
                                         <AutoCompleteField
+                                            {...getFieldProps('vendor')}
                                             fullWidth
                                             name="vendor"
                                             label="Vendor"
                                             options={vendor}
                                             size="small"
                                             isDefaultRenderer={false}
-                                            {...getFieldProps('vendor')} />
+                                            onChange={(e, { id }) => {
+                                                setFieldValue('vendor', id)
+                                            }}
+
+                                        />
                                         <AutoCompleteField
                                             fullWidth
                                             name="brand"
                                             label="Brand"
                                             options={brand}
                                             size="small"
-                                            {...getFieldProps('brand')} />
+                                            {...getFieldProps('brand')}
+                                            onChange={(e, { id }) => {
+                                                setFieldValue('brand', id)
+                                            }}
+                                        />
                                     </Stack>
                                     <Stack
                                         direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row' }}
@@ -184,14 +206,22 @@ const AddProduct = () => {
                                             label="Product Category"
                                             options={productCategory}
                                             size="small"
-                                            {...getFieldProps('productCategory')} />
+                                            {...getFieldProps('productCategory')}
+                                            onChange={(e, { id }) => {
+                                                setFieldValue('productCategory', id)
+                                            }}
+                                        />
                                         <AutoCompleteField
                                             fullWidth
                                             name="packageType"
                                             label="Package Type"
                                             options={packageType}
                                             size="small"
-                                            {...getFieldProps('packageType')} />
+                                            {...getFieldProps('packageType')}
+                                            onChange={(e, { id }) => {
+                                                setFieldValue('packageType', id)
+                                            }}
+                                        />
                                     </Stack>
                                     <Stack
                                         direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row' }}
@@ -212,7 +242,11 @@ const AddProduct = () => {
                                             label="Unit"
                                             options={unit}
                                             size="small"
-                                            {...getFieldProps('unit')} />
+                                            {...getFieldProps('unit')}
+                                            onChange={(e, { id }) => {
+                                                setFieldValue('unit', id)
+                                            }}
+                                        />
 
                                     </Stack>
                                     <Stack
@@ -225,7 +259,11 @@ const AddProduct = () => {
                                             label="Currency"
                                             options={currency}
                                             size="small"
-                                            {...getFieldProps('currency')} />
+                                            {...getFieldProps('currency')}
+                                            onChange={(e, { id }) => {
+                                                setFieldValue('currency', id)
+                                            }}
+                                        />
                                         <TextField
                                             fullWidth
                                             label="Regular Price"

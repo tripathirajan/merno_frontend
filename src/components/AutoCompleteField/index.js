@@ -3,6 +3,10 @@ import PropTypes from 'prop-types'
 import { Autocomplete, TextField, Box, Typography, Stack, Avatar } from '@mui/material'
 
 const AutoCompleteField = forwardRef(({ name, label, options, isDefaultRenderer = true, value, ...rest }, ref) => {
+    if (name === 'vendor') {
+        //console.log('onchange', rest.onChange)
+    }
+
     if (isDefaultRenderer) {
         return (<Autocomplete
             ref={ref}

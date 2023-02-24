@@ -24,7 +24,7 @@ export function responsiveFontSizes({ sm, md, lg }) {
 
 // ----------------------------------------------------------------------
 
-const FONT_PRIMARY = 'Poppins, sans-serif'; // Google Font
+const FONT_PRIMARY = 'sans-serif'; // Google Font
 
 const typography = {
     fontFamily: FONT_PRIMARY,

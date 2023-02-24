@@ -1,68 +1,36 @@
 import React from 'react'
 import Page from '../../components/Page'
-import { Avatar, Button, ButtonGroup, Grid, IconButton, Paper, Stack, Typography, styled } from '@mui/material';
-import useAuth from '../../contexts/AuthContext';
-import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
-import VpnKeyTwoToneIcon from '@mui/icons-material/VpnKeyTwoTone';
-import LockTwoToneIcon from '@mui/icons-material/LockTwoTone';
+import { Grid, Paper, Typography, } from '@mui/material';
+import ProfileResetPassword from './ProfileResetPassword';
+import EditProfile from './EditProfile';
 
-const ProfilePicPreview = styled(Avatar)(({ theme }) => ({
-    width: '150px',
-    height: '150px',
-    border: `2px solid ${theme.palette.background.default}`,
-    padding: theme.spacing(1)
-}))
+
 const Profile = () => {
-    const { userInfo: { fullName, username, photoURL = '' } } = useAuth()
     return (
         <Page
             title="Profile | Merno"
             legend={`Profile`}
         >
-            <Grid container spacing={2}>
-                <Grid item xs={12} md={4} lg={4}>
-                    <Paper sx={{ p: 2 }}>
-                        <Stack
-                            direction={'column'}
-                            alignItems={'center'}
-                            justifyContent={'center'}
-                            spacing={2}
-                        >
-                            <ProfilePicPreview
-                                src={photoURL}
-                            />
-                            <Stack
-                                direction={'column'}
-                                alignItems={'center'}
-                                justifyContent={'center'}
-                            >
-                                <Typography variant="h6" color="secondary" noWrap>
-                                    {fullName}
-                                </Typography>
-                                <Typography variant="caption" sx={{ color: 'text.secondary', textTransform: 'lowercase' }} noWrap>
-                                    {username}
-                                </Typography>
-                            </Stack>
-                            <ButtonGroup variant="outlined" aria-label="social links">
-                                <IconButton title='Settings'>
-                                    <SettingsTwoToneIcon />
-                                </IconButton>
-                                <IconButton title='Change password'>
-                                    <VpnKeyTwoToneIcon />
-                                </IconButton>
-                                <IconButton title='Logout'>
-                                    <LockTwoToneIcon />
-                                </IconButton>
-                            </ButtonGroup>
-                        </Stack>
-                    </Paper>
+            <Paper sx={{ p: 2 }} elevation={0} variant='outlined'>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={4} lg={4}>
+                        <Typography variant='subtitle2' color={'secondary'}>My Info</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={8} lg={8}>
+                        <EditProfile />
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} md={8} lg={8}>
-                    <Paper sx={{ p: 2 }}>
-                        page1
-                    </Paper>
+            </Paper>
+            <Paper sx={{ p: 2, mt: 1 }} elevation={0} variant='outlined'>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={4} lg={4}>
+                        <Typography variant='subtitle2' color={'secondary'}>Change Password</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={8} lg={8}>
+                        <ProfileResetPassword />
+                    </Grid>
                 </Grid>
-            </Grid>
+            </Paper>
         </Page>
     )
 }

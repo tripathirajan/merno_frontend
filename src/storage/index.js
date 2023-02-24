@@ -6,9 +6,17 @@ import masterReducer from './slices/masterSlice';
 import vendorReducer from './slices/vendorSlice';
 import comboReducer from './slices/comboSlice';
 import productReducer from './slices/productSlice';
+import userReducer from './slices/userSlice';
 
 const isDev = process.env.NODE_ENV !== 'production';
+const disableReduxLogger = process.env.REACT_DISABLE_REDUX_LOGGER;
 
+const getReduxMiddleware = (getDefaultMiddleware) => {
+    if (disableReduxLogger || !isDev) {
+        return getDefaultMiddleware();
+    }
+    return getDefaultMiddleware().concat(reduxLogger);
+}
 const store = configureStore({
     reducer: {
         auth: authReducer,
@@ -16,9 +24,10 @@ const store = configureStore({
         master: masterReducer,
         vendor: vendorReducer,
         combos: comboReducer,
-        product: productReducer
+        product: productReducer,
+        user: userReducer
     },
-    middleware: getDefaultMiddleware => isDev ? getDefaultMiddleware() : getDefaultMiddleware(),
+    middleware: getReduxMiddleware,
     devTools: isDev
 });
 

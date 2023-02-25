@@ -34,7 +34,7 @@ const SideNav = ({ title = "Merno", openNav, onCloseNav }) => {
                 }}>{title}</Typography>
             </Box>
 
-            <NavSection data={menus} sx={{ mt: 2 }} />
+            <NavSection data={menus} sx={{ mt: 2 }} mobiledrawer={!isDesktop} />
 
         </Scrollbar>
     );
@@ -53,7 +53,7 @@ const SideNav = ({ title = "Merno", openNav, onCloseNav }) => {
                     PaperProps={{
                         sx: {
                             width: NAV_WIDTH,
-                            bgcolor: 'background.paper',
+                            bgcolor: 'background.neutral',
                             borderRightStyle: 'none',
                             padding: 1
                         },

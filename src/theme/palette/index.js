@@ -10,7 +10,6 @@ import {
     WARNING,
     GRADIENTS,
     BLUE_LIGHTER,
-    BLACK_GREY,
     BLACK_LIGHT,
     BLACK_LIGHTER
 } from "../color";
@@ -31,7 +30,7 @@ const palette = {
         secondary: BLACK_LIGHT,
         disabled: BLACK_LIGHTER
     },
-    background: { paper: WHITE, default: BLUE_LIGHTER, neutral: BLACK_GREY },
+    background: { paper: WHITE, default: WHITE, neutral: BLUE_LIGHTER },
     action: {
         active: GREY[600],
         hover: GREY[5008],

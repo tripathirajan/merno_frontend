@@ -19,6 +19,7 @@ const AuthLayout = () => {
         <StyledRoot>
             <Container maxWidth="sm">
                 <Paper
+                    variant='outlined'
                     sx={{
                         p: 2,
                         maxWidth: { xs: 400, lg: 475 },
@@ -29,11 +30,7 @@ const AuthLayout = () => {
                         }
                     }}
                 >
-                    <Box
-                    // sx={{ p: { xs: 1, sm: 2, xl: 4 } }}
-                    >
-                        <Outlet />
-                    </Box>
+                    <Outlet />
                 </Paper>
             </Container>
 

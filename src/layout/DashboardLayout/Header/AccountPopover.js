@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { Divider, Typography, Stack, MenuItem, Avatar, Button, Popover, Badge } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUserInfo } from '../../../storage/slices/authSlice';
+import { useDispatch } from 'react-redux';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { styled } from '@mui/material/styles';
 import useAuth from '../../../contexts/AuthContext';
@@ -41,7 +40,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const AccountPopover = props => {
     const [open, setOpen] = useState(null);
-    const { userInfo: { fullName, username, photoURL = '' } } = useAuth();
+    const { userInfo: { fullName, username, image = '' } } = useAuth();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -106,7 +105,7 @@ const AccountPopover = props => {
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                         variant="dot"
                     >
-                        <Avatar src={photoURL} alt={fullName} />
+                        <Avatar src={image} alt={fullName} />
                     </StyledBadge>
                     <Stack
                         direction="column"

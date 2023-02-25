@@ -19,11 +19,11 @@ const Page = forwardRef((props, ref) => {
                         alignItems="center"
                     >
                         {
-                            onBackClick && <IconButton title="Go Back" color="secondary" size="small" onClick={onBackClick}>
+                            onBackClick && <IconButton title="Go Back" color="secondary" size="normal" onClick={onBackClick}>
                                 <ArrowBackIosNewTwoToneIcon fontSize="inherit" />
                             </IconButton>
                         }
-                        <Typography variant="h6" color="secondary">
+                        <Typography variant="h4" color="secondary">
                             {legend}
                         </Typography>
                     </Stack>

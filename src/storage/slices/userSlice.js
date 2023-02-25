@@ -2,13 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const userReducer = createSlice({
     name: 'user',
-    initialState: {},
+    initialState: { info: {} },
     reducers: {
         setUserInfo: (state, { payload }) => {
-            state = payload;
+            state.info = payload;
         },
         resetUserInfo: (state) => {
-            state = null;
+            state.info = null;
         }
     }
 });
@@ -20,4 +20,4 @@ export default userReducer.reducer;
 
 // selectors
 
-export const selectUserProfile = state => state?.user || null;
+export const selectUserProfile = state => state?.user?.info || null;

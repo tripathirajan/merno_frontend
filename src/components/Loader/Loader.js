@@ -1,7 +1,8 @@
 import React from 'react';
 import { Container, CircularProgress, Paper, Stack, Typography, Box } from '@mui/material';
 
-const Loader = () => {
+const Loader = (props) => {
+    const { paperProps } = props;
     return (
         <Container maxWidth="sm">
             <Stack
@@ -16,6 +17,7 @@ const Loader = () => {
                 <Paper
                     sx={{ p: 2 }}
                     variant="outlined"
+                    {...paperProps}
                 >
                     <Stack
                         direction="row"

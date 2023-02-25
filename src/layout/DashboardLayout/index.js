@@ -16,13 +16,13 @@ const MainStyle = styled('main')(({ theme }) => ({
     flexGrow: 1,
     overflow: 'auto',
     minHeight: '100%',
-    paddingTop: HEADER_MOBILE + 16,
+    paddingTop: HEADER_MOBILE + 25,
     paddingBottom: theme.spacing(10),
     // paddingLeft: theme.spacing(2),
     // paddingRight: theme.spacing(2),
     color: theme.palette.text.secondary,
     [theme.breakpoints.up('lg')]: {
-        paddingTop: HEADER_DESKTOP + 16
+        paddingTop: HEADER_DESKTOP + 25
     }
 }));
 

@@ -14,10 +14,11 @@ const StyledRoot = styled('div')(({ theme }) => ({
     zIndex: 1300
 }));
 
-const PageLoader = () => {
+const PageLoader = (props) => {
+    const { paperProps } = props;
     return (
         <StyledRoot>
-            <Loader />
+            <Loader paperProps={paperProps} />
         </StyledRoot>
     )
 }

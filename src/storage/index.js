@@ -9,7 +9,7 @@ import productReducer from './slices/productSlice';
 import userReducer from './slices/userSlice';
 
 const isDev = process.env.NODE_ENV !== 'production';
-const disableReduxLogger = process.env.REACT_DISABLE_REDUX_LOGGER;
+const disableReduxLogger = process.env.REACT_APP_DISABLE_REDUX_LOGGER;
 
 const getReduxMiddleware = (getDefaultMiddleware) => {
     if (disableReduxLogger || !isDev) {

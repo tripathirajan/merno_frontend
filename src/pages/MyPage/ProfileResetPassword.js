@@ -1,9 +1,16 @@
 import { Box, TextField, Stack, Button } from '@mui/material';
 import { FormikProvider, useFormik, Form } from 'formik'
-import React from 'react'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
+import { resetPassword } from '../../storage/actions/userAction';
+import Toaster, { toastType } from '../../components/Toaster';
+
+const alertInititialValue = { show: false, message: '', type: toastType.default }
 
 const ProfileResetPassword = () => {
+  const dispatch = useDispatch();
+  const [appAlert, setAppAlert] = useState(alertInititialValue);
   const changePasswordForm = useFormik({
     initialValues: {
       currentPassword: '',
@@ -12,15 +19,28 @@ const ProfileResetPassword = () => {
     },
     validationSchema: Yup.object().shape({
       currentPassword: Yup.string().min(8).max(22).required("Enter your current password."),
-      newPassword: Yup.string().min(8).max(22).required("Enter new password."),
-      confirmNewPassword: Yup.string().min(8).max(22).required("Confirm your new password.")
+      newPassword: Yup.string().notOneOf([Yup.ref('currentPassword'), null], "New password can't be same as current password.").min(8).max(22).required("Enter new password."),
+      confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Passwords not matching.')
     }),
-    onSubmit: async (values, { setSubmitting, resetForm }) => { }
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      const { success, message } = await dispatch(resetPassword(values));
+      setSubmitting(false);
+      resetForm();
+      if (!success) {
+        setAppAlert({ show: true, message, type: toastType.error })
+        return;
+      };
+      setAppAlert({ show: true, message: 'Profile updated successfully!', type: toastType.success })
+    }
   });
   const { errors, touched, isSubmitting, handleSubmit, getFieldProps } = changePasswordForm;
 
+  const handleAlertClose = () => {
+    setAppAlert(alertInititialValue)
+  }
   return (
     <FormikProvider value={changePasswordForm}>
+      <Toaster open={appAlert.show} horizontal="right" message={appAlert.message} type={appAlert.type} handleClose={handleAlertClose} />
       <Box
         component={Form}
         onSubmit={handleSubmit}

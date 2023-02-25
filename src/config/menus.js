@@ -67,12 +67,12 @@ const menus = [
             {
                 title: 'Profile',
                 path: '/profile',
-                icon: 'user'
+                icon: 'profile'
             },
             {
                 title: 'Settings',
                 path: '/settings',
-                icon: 'user'
+                icon: 'settings'
             }
         ]
     }

@@ -10,6 +10,8 @@ import StorefrontTwoToneIcon from '@mui/icons-material/StorefrontTwoTone';
 import RemoveRedEyeTwoToneIcon from '@mui/icons-material/RemoveRedEyeTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import PersonOutlineTwoToneIcon from '@mui/icons-material/PersonOutlineTwoTone';
+import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 
 const icons = {
     dashboard: GridViewTwoToneIcon,
@@ -23,7 +25,9 @@ const icons = {
     vendor: StorefrontTwoToneIcon,
     view: RemoveRedEyeTwoToneIcon,
     delete: DeleteTwoToneIcon,
-    edit: EditTwoToneIcon
+    edit: EditTwoToneIcon,
+    profile: PersonOutlineTwoToneIcon,
+    settings: SettingsTwoToneIcon
 }
 
 export default icons;

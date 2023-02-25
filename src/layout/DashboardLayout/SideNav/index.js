@@ -29,7 +29,7 @@ const SideNav = ({ title = "Merno", openNav, onCloseNav }) => {
             }}
         >
             <Box sx={{ px: 1.5, py: 2, display: 'inline-flex', justifyContent: 'center' }}>
-                <Typography variant="h6" component="h6" color="primary" sx={{
+                <Typography variant="h6" component="h6" color="secondary" sx={{
                     fontWeight: 'fontWeightBold'
                 }}>{title}</Typography>
             </Box>

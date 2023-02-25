@@ -37,7 +37,7 @@ const Dashboard = () => {
     return (
         <Page
             title="Dashboard | Merno"
-            legend={` Welcome, ${fullName} !`}
+            legend={` Welcome ${fullName} !`}
             subtitle="Checkout latest update on your account"
         >
             <Stack

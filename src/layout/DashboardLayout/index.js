@@ -30,8 +30,8 @@ const DashboardLayout = () => {
     const [open, setOpen] = useState(false);
     return (
         <RootStyle>
-            <Header title="Mernodico" onClickMenu={() => setOpen(prevState => !prevState)} />
-            <SideNav openNav={open} onCloseNav={() => setOpen(false)} />
+            <Header title="Merno" onClickMenu={() => setOpen(prevState => !prevState)} />
+            <SideNav title="Merno" openNav={open} onCloseNav={() => setOpen(false)} />
             <MainStyle>
                 <Outlet />
             </MainStyle>

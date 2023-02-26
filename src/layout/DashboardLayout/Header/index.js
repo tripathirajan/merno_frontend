@@ -7,7 +7,8 @@ import {
     Box,
     IconButton,
     Stack,
-    alpha
+    alpha,
+    Typography
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountPopover from './AccountPopover';
@@ -35,7 +36,7 @@ const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
     }
 }));
 
-const Header = ({ onClickMenu }) => {
+const Header = ({ title, onClickMenu }) => {
     return (
         <RootStyle>
             <ToolbarStyle>
@@ -48,6 +49,16 @@ const Header = ({ onClickMenu }) => {
                 >
                     <MenuIcon />
                 </IconButton>
+                <Typography
+                    variant="h6"
+                    component="h6"
+                    color="secondary"
+                    sx={{
+                        fontWeight: 'fontWeightBold',
+                        display: { lg: 'none' }
+                    }}>
+                    {title}
+                </Typography>
                 {/* <Searchbar /> */}
                 <Box sx={{ flexGrow: 1 }} />
                 <Stack

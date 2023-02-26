@@ -98,7 +98,7 @@ function NavItem({ item }) {
         >
             <StyledNavItemIcon><AppIcon sx={{ fontSize: '1.2rem' }} /></StyledNavItemIcon>
 
-            <ListItemText disableTypography primary={title} />
+            <ListItemText disableTypography primary={title} sx={{ fontWeight: '500' }} />
 
             {info && info}
         </StyledNavItem>

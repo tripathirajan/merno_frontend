@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { styled } from '@mui/material/styles';
-import { Paper, Box, Container } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Paper, Container } from '@mui/material';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import useAuth from '../../contexts/AuthContext';
+import AppLoader from '../../components/Loader/AppLoader';
 
 
 const StyledRoot = styled('div')(({ theme }) => ({
@@ -15,6 +17,22 @@ const StyledRoot = styled('div')(({ theme }) => ({
 }));
 
 const AuthLayout = () => {
+    const { isloading, userInfo: { accessToken } } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { state } = location;
+    const { redirectTo = '/dashboard' } = state || {};
+
+    useEffect(() => {
+        if (!isloading && accessToken) {
+            navigate(redirectTo);
+        }
+    }, [isloading, accessToken, navigate, redirectTo])
+
+    if (isloading) {
+        return <AppLoader />;
+    }
+
     return (
         <StyledRoot>
             <Container maxWidth="sm">

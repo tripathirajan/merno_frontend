@@ -19,7 +19,7 @@ export const ALERT_TYPE_WARNING = "warning";
 // string constants
 export const DATETIME_FORMAT = 'MM/DD/YYYY HH:mm A';
 export const ERR_NETWORK = "ERR_NETWORK";
-// image action 
+// image action
 export const IMAGE_ACTION_NONE = 'none';
 export const IMAGE_ACTION_UPDATE = 'change';
 export const IMAGE_ACTION_RESET = 'reset';

@@ -91,10 +91,10 @@ const ViewVendor = () => {
                         spacing={2}
                     >
                         {
-                            lat && lng && <MapPanel lat={lat} lng={lng} />
+                            lat && lng ? <MapPanel lat={lat} lng={lng} /> : null
                         }
                         <List
-                            subheader={<ListSubheader>Basic Info</ListSubheader>}
+                            subheader={<ListSubheader sx={{ color: 'text.primary' }}>Basic Info</ListSubheader>}
 
                         >
                             <ListItem divider>

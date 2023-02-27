@@ -3,14 +3,12 @@ import { Helmet } from 'react-helmet-async';
 import { forwardRef } from 'react';
 import { Box, Container, IconButton, Stack, Typography } from '@mui/material';
 import ArrowBackIosNewTwoToneIcon from '@mui/icons-material/ArrowBackIosNewTwoTone';
+
 const Page = forwardRef((props, ref) => {
     const { children, title = '', actions, legend, subtitle, onBackClick, ...other } = props;
 
     return (
-        <Box ref={ref} {...other}>
-            <Helmet>
-                <title>{title}</title>
-            </Helmet>
+        <PageWithTitle title={title} ref={ref} {...other}>
             <Container>
                 <Stack direction="column" alignItems="flexStart" justifyContent="flexStart" mb={2}>
                     <Stack
@@ -19,11 +17,11 @@ const Page = forwardRef((props, ref) => {
                         alignItems="center"
                     >
                         {
-                            onBackClick && <IconButton title="Go Back" color="secondary" size="small" onClick={onBackClick}>
+                            onBackClick && <IconButton title="Go Back" color="secondary" size="normal" onClick={onBackClick}>
                                 <ArrowBackIosNewTwoToneIcon fontSize="inherit" />
                             </IconButton>
                         }
-                        <Typography variant="h6" color="secondary">
+                        <Typography variant="h4" color="secondary">
                             {legend}
                         </Typography>
                     </Stack>
@@ -36,7 +34,7 @@ const Page = forwardRef((props, ref) => {
                 </Stack>
                 {children}
             </Container>
-        </Box>
+        </PageWithTitle>
     )
 });
 
@@ -46,3 +44,20 @@ Page.propTypes = {
 };
 
 export default Page;
+
+export const PageWithTitle = forwardRef((props, ref) => {
+    const { children, title = '', ...other } = props;
+
+    return (
+        <Box ref={ref} {...other}>
+            <Helmet>
+                <title>{title}</title>
+            </Helmet>
+            {children}
+        </Box>
+    )
+});
+PageWithTitle.propTypes = {
+    children: PropTypes.node.isRequired,
+    title: PropTypes.string
+};

@@ -18,49 +18,59 @@ import Vendor from "./pages/Vendor";
 import AddVendor from "./pages/Vendor/AddVendor";
 import ViewVendor from "./pages/Vendor/ViewVendor";
 import { AuthProvider } from "./contexts/AuthContext";
+import Profile from "./pages/MyPage/Profile";
+import Settings from "./pages/MyPage/Settings";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/">
-        <Route index element={<Navigate to="/login" replace />} />
-        <Route element={<AuthLayout />}>
-          <Route path='login' element={<Login />} />
-          <Route path="forgotPassword" element={<ForgotPassword />} />
-          <Route path="changePassword/:token" element={<ChangePassword />} />
+    <AuthProvider>
+      <Routes>
+        <Route path="/">
           <Route index element={<Navigate to="/login" replace />} />
-        </Route>
-        <Route element={<AuthProvider><PersistLogin /> </AuthProvider>}>
-          <Route element={<DashboardLayout />}>
-            <Route path='dashboard' element={<Dashboard />} />
-            <Route path="product">
-              <Route index={true} element={<ProductList />} />
-              <Route path="add" element={<AddProduct />} />
-              <Route path="edit/:productId" element={<>edit</>} />
-            </Route>
-            <Route path="vendor">
-              <Route index={true} element={<Vendor />} />
-              <Route path="add" element={<AddVendor />} />
-              <Route path="view/:vendorId" element={<ViewVendor />} />
-            </Route>
-            {/* master section */}
-            <Route path="product-category" element={<ProductCategory />} />
-            <Route path="brand" element={<Brand />} />
-            <Route path="package-type" element={<PackageType />} />
-            <Route path="unit" element={<Unit />} />
-            <Route path="currency" element={<Currency />} />
+          <Route element={<AuthLayout />}>
+            <Route path='login' element={<Login />} />
+            <Route path="forgotPassword" element={<ForgotPassword />} />
+            <Route path="changePassword/:token" element={<ChangePassword />} />
+            <Route index element={<Navigate to="/login" replace />} />
           </Route>
+          <Route element={<PersistLogin />}>
+            <Route element={<DashboardLayout />}>
+              <Route path='dashboard' element={<Dashboard />} />
+              {/* product section */}
+              <Route path="product">
+                <Route index={true} element={<ProductList />} />
+                <Route path="add" element={<AddProduct />} />
+                <Route path="edit/:productId" element={<>edit</>} />
+              </Route>
+              {/* vendor section */}
+              <Route path="vendor">
+                <Route index={true} element={<Vendor />} />
+                <Route path="add" element={<AddVendor />} />
+                <Route path="view/:vendorId" element={<ViewVendor />} />
+              </Route>
+              {/* master section */}
+              <Route path="product-category" element={<ProductCategory />} />
+              <Route path="brand" element={<Brand />} />
+              <Route path="package-type" element={<PackageType />} />
+              <Route path="unit" element={<Unit />} />
+              <Route path="currency" element={<Currency />} />
+
+              {/* my-page  */}
+              <Route path="profile" element={<Profile />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
+          </Route>
+          <Route
+            path="*"
+            element={<h3>404 Not Found!</h3>}
+          />
         </Route>
         <Route
           path="*"
           element={<h3>404 Not Found!</h3>}
         />
-      </Route>
-      <Route
-        path="*"
-        element={<h3>404 Not Found!</h3>}
-      />
-    </Routes>
+      </Routes>
+    </AuthProvider>
 
   );
 }

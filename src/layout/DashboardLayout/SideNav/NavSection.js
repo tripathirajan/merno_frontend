@@ -27,7 +27,7 @@ export const StyledNavItem = styled((props) => <ListItemButton disableGutters {.
         backgroundColor: theme.palette.primary.main
     },
     '&.active': {
-        color: theme.palette.primary.main,
+        color: theme.palette.secondary.main,
         backgroundColor: theme.palette.action.selected,
         fontWeight: theme.typography.fontWeightMedium
     },
@@ -50,11 +50,11 @@ const StylesListSubheader = styled((props) => <ListSubheader {...props} />)(({ t
     fontSize: '0.75rem',
     textTransform: 'uppercase',
     padding: theme.spacing(1, 1, 1),
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
     lineHeight: 1
 }));
 
-const NavSection = ({ data = [], ...other }) => {
+const NavSection = ({ data = [], mobiledrawer, ...other }) => {
     return (
         <Box {...other}>
             {
@@ -63,7 +63,12 @@ const NavSection = ({ data = [], ...other }) => {
                         key={`lstx_${i}`}
                         disablePadding
                         subheader={
-                            <StylesListSubheader component="div">
+                            <StylesListSubheader
+                                component="div"
+                                sx={{
+                                    backgroundColor: mobiledrawer ? 'background.default' : 'background.neutral'
+                                }}
+                            >
                                 {items.title}
                             </StylesListSubheader>
                         }
@@ -93,7 +98,7 @@ function NavItem({ item }) {
         >
             <StyledNavItemIcon><AppIcon sx={{ fontSize: '1.2rem' }} /></StyledNavItemIcon>
 
-            <ListItemText disableTypography primary={title} />
+            <ListItemText disableTypography primary={title} sx={{ fontWeight: '500' }} />
 
             {info && info}
         </StyledNavItem>

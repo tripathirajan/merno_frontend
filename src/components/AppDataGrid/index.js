@@ -9,12 +9,15 @@ import {
     GridColumnMenu,
     GridToolbarQuickFilter,
     GridLinkOperator,
-    useGridApiContext,
-    useGridSelector,
-    gridPageCountSelector,
-    gridPageSelector,
+    // useGridApiContext,
+    // useGridSelector,
+    // gridPageCountSelector,
+    // gridPageSelector,
 } from '@mui/x-data-grid';
-import { Box, Paper, Stack, Button, Menu, MenuItem, ListItemIcon, ListItemText, Pagination } from '@mui/material';
+import {
+    Box, Paper, Stack, Button, Menu, MenuItem, ListItemIcon, ListItemText,
+    // Pagination
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import NoDataFound from '../SvgIcons/NoDataFound';
@@ -58,14 +61,15 @@ const StyledDataGrid = styled((props) => <DataGrid  {...props} />)(({ theme }) =
         outline: 'none'
     },
     '& .MuiDataGrid-cell': {
-        borderBottom: `3px solid ${theme.palette.background.default}`,
+        borderBottom: `10px solid ${theme.palette.background.neutral}`,
         color: theme.palette.text.secondary
     },
     '& .MuiDataGrid-cell:focus': {
         outline: 'none'
     },
     '& .primary-col': {
-        color: theme.palette.text.primary
+        color: theme.palette.text.primary,
+        fontWeight: 'bold'
     },
     '& .MuiDataGrid-pinnedColumns': {
         position: 'sticky',
@@ -110,7 +114,7 @@ const GridCustomToolbar = React.memo(({ showAddAction, handleAddClick, addAction
             <GridToolbarExport color="secondary" sx={{ ml: 1 }} />
             {
                 showAddAction && <StyledActionButton
-                    color="secondary"
+                    color="primary"
                     variant="contained"
                     startIcon={<AddCircleIcon />}
                     onClick={handleAddClick}
@@ -129,17 +133,18 @@ const CustomOverlay = () => {
     </StyledGridOverlay>)
 }
 
-const CustomPagination = (props) => {
-    const apiRef = useGridApiContext();
-    const page = useGridSelector(apiRef, gridPageSelector);
-    const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-    return (<Pagination
-        color="primary"
-        count={pageCount}
-        page={page + 1}
-        onChange={(event, value) => apiRef.current.setPage(value - 1)}
-    />)
-}
+// TODO: customize pagination for grid
+// const CustomPagination = (props) => {
+//     const apiRef = useGridApiContext();
+//     const page = useGridSelector(apiRef, gridPageSelector);
+//     const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+//     return (<Pagination
+//         color="primary"
+//         count={pageCount}
+//         page={page + 1}
+//         onChange={(event, value) => apiRef.current.setPage(value - 1)}
+//     />)
+// }
 const AppDataGrid = ({
     rows,
     columns,
@@ -253,7 +258,7 @@ const AppDataGrid = ({
             direction="column"
             spacing={1}
         >
-            <Box component={Paper} sx={{ height: '75vh', width: '100%', p: 0 }} elevation={0}>
+            <Box component={Paper} sx={{ height: '75vh', width: '100%', p: 0 }} variant='outlined'>
                 {isLoading ? <PageLoader /> : <>
                     <StyledDataGrid
                         disableSelectionOnClick={true}
@@ -265,8 +270,7 @@ const AppDataGrid = ({
                         components={{
                             ColumnMenu: StyledGridColumnMenu,
                             NoRowsOverlay: CustomOverlay,
-                            Toolbar: ({ setFilterButtonEl }) => <GridCustomToolbar showAddAction={!readOnly} setFilterButtonEl={setFilterButtonEl} addActionLabel={addActionLabel} handleAddClick={handleAddActionClick} onReload={onReload} />,
-                            Pagination: CustomPagination
+                            Toolbar: ({ setFilterButtonEl }) => <GridCustomToolbar showAddAction={!readOnly} setFilterButtonEl={setFilterButtonEl} addActionLabel={addActionLabel} handleAddClick={handleAddActionClick} onReload={onReload} />
                         }}
                         getCellClassName={(params) => {
                             return params?.field === keyField ? 'primary-col' : '';

@@ -7,7 +7,8 @@ import {
     Box,
     IconButton,
     Stack,
-    alpha
+    alpha,
+    Typography
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountPopover from './AccountPopover';
@@ -17,9 +18,9 @@ import { DRAWER_WIDTH, HEADER_MOBILE, HEADER_DESKTOP } from '../../../constants'
 
 const RootStyle = styled((props) => <AppBar  {...props} />)(({ theme }) => ({
     boxShadow: 'none',
-    backdropFilter: 'blur(6px)',
-    WebkitBackdropFilter: 'blur(6px)', // Fix on Mobile
-    backgroundColor: alpha(theme.palette.background.default, 0.72),
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)', // Fix on Mobile
+    backgroundColor: alpha(theme.palette.background.default, 0.8),
     padding: theme.spacing(1),
     [theme.breakpoints.up('lg')]: {
         width: `calc(100% - ${DRAWER_WIDTH + 1}px)`
@@ -35,7 +36,7 @@ const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
     }
 }));
 
-const Header = ({ onClickMenu }) => {
+const Header = ({ title, onClickMenu }) => {
     return (
         <RootStyle>
             <ToolbarStyle>
@@ -48,6 +49,16 @@ const Header = ({ onClickMenu }) => {
                 >
                     <MenuIcon />
                 </IconButton>
+                <Typography
+                    variant="h6"
+                    component="h6"
+                    color="secondary"
+                    sx={{
+                        fontWeight: 'fontWeightBold',
+                        display: { lg: 'none' }
+                    }}>
+                    {title}
+                </Typography>
                 {/* <Searchbar /> */}
                 <Box sx={{ flexGrow: 1 }} />
                 <Stack

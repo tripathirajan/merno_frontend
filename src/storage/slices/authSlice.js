@@ -5,14 +5,15 @@ const authSlice = createSlice({
     initialState: { fullName: '', username: '', accessToken: '', email: '', id: '', role: [], isAuthenticated: false },
     reducers: {
         setLogedinUserInfo: (state, { payload }) => {
-            const { fullName, username, accessToken, email, id, role = [] } = payload;
+            const { fullName, username, accessToken, email, id, role = [], image } = payload;
             state.fullName = fullName;
             state.username = username;
             state.accessToken = accessToken;
             state.email = email;
             state.id = id;
             state.role = role;
-            state.isAuthenticated = accessToken !== ''
+            state.isAuthenticated = accessToken !== '';
+            state.image = image;
         },
         clearLogedinUserInfo: (state, action) => {
             state.fullName = '';
@@ -22,15 +23,23 @@ const authSlice = createSlice({
             state.id = '';
             state.role = '';
             state.isAuthenticated = false;
+            state.image = '';
         },
         updateAccessToken: (state, { payload }) => {
             state.accessToken = payload?.accessToken;
-        }
+        },
+        updateProfileField: (state, { payload }) => {
+            if (payload?.length > 0) {
+                for (const field of payload) {
+                    state[field.name] = field.value;
+                }
+            }
+        },
     }
 });
 
 // actions
-export const { setLogedinUserInfo, clearLogedinUserInfo, updateAccessToken } = authSlice.actions;
+export const { setLogedinUserInfo, clearLogedinUserInfo, updateAccessToken, updateProfileField } = authSlice.actions;
 
 // reducer
 export default authSlice.reducer;

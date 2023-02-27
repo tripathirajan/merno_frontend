@@ -19,6 +19,10 @@ export const ALERT_TYPE_WARNING = "warning";
 // string constants
 export const DATETIME_FORMAT = 'MM/DD/YYYY HH:mm A';
 export const ERR_NETWORK = "ERR_NETWORK";
+// image action
+export const IMAGE_ACTION_NONE = 'none';
+export const IMAGE_ACTION_UPDATE = 'change';
+export const IMAGE_ACTION_RESET = 'reset';
 
 // http status code
 export const HTTP_STATUS_CODE_SUCCESS = 200;
@@ -89,3 +93,9 @@ export const VENDOR_INFO = "/vendor/info";
 
 // combos
 export const COMBO_LIST = '/combo';
+
+// user profile
+
+export const USER_PROFILE_UPDATE = '/user/updateInfo';
+export const USER_PROFILE_INFO = '/user/info';
+export const USER_PROFILE_RESET_PASSWORD = '/user/resetPassword';

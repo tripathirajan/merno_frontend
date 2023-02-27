@@ -26,8 +26,8 @@ const ProfileRenderer = (props) => {
             alignItems="flex-start"
             onClick={handleTitleClick}
         >
-            <Typography variant='body2' color="primary" sx={{ fontWeight: 'bold' }}>{title}</Typography>
-            <Typography variant='caption' sx={{ color: 'text.secondary' }}>{subtitle1}</Typography>
+            <Typography variant='subtitle2' color="primary" sx={{ fontWeight: 'bold' }}>{title}</Typography>
+            <Typography variant='body2' sx={{ color: 'text.secondary' }}>{subtitle1}</Typography>
         </Stack>
     </Stack>
     )

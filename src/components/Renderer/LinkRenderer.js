@@ -8,7 +8,7 @@ import { NavLink as RouterLink } from 'react-router-dom';
 const LinkRenderer = props => {
     const { text, url, tooltip } = props;
 
-    return <Link title={tooltip || text} component={RouterLink} variant="subtitle2" to={url} sx={{
+    return <Link title={tooltip || text} component={RouterLink} to={url} sx={{
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         overflow: 'hidden'

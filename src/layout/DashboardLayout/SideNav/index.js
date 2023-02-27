@@ -29,12 +29,12 @@ const SideNav = ({ title = "Merno", openNav, onCloseNav }) => {
             }}
         >
             <Box sx={{ px: 1.5, py: 2, display: 'inline-flex', justifyContent: 'center' }}>
-                <Typography variant="h6" component="h6" color="primary" sx={{
+                <Typography variant="h6" component="h6" color="secondary" sx={{
                     fontWeight: 'fontWeightBold'
                 }}>{title}</Typography>
             </Box>
 
-            <NavSection data={menus} sx={{ mt: 2 }} />
+            <NavSection data={menus} sx={{ mt: 2 }} mobiledrawer={!isDesktop} />
 
         </Scrollbar>
     );
@@ -53,7 +53,7 @@ const SideNav = ({ title = "Merno", openNav, onCloseNav }) => {
                     PaperProps={{
                         sx: {
                             width: NAV_WIDTH,
-                            bgcolor: 'background.paper',
+                            bgcolor: 'background.neutral',
                             borderRightStyle: 'none',
                             padding: 1
                         },

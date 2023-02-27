@@ -12,6 +12,7 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import PersonOutlineTwoToneIcon from '@mui/icons-material/PersonOutlineTwoTone';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
+import AdminPanelSettingsTwoToneIcon from '@mui/icons-material/AdminPanelSettingsTwoTone';
 
 const icons = {
     dashboard: GridViewTwoToneIcon,
@@ -27,7 +28,8 @@ const icons = {
     delete: DeleteTwoToneIcon,
     edit: EditTwoToneIcon,
     profile: PersonOutlineTwoToneIcon,
-    settings: SettingsTwoToneIcon
+    settings: SettingsTwoToneIcon,
+    roles: AdminPanelSettingsTwoToneIcon
 }
 
 export default icons;

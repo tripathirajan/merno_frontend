@@ -20,6 +20,7 @@ import ViewVendor from "./pages/Vendor/ViewVendor";
 import { AuthProvider } from "./contexts/AuthContext";
 import Profile from "./pages/MyPage/Profile";
 import Settings from "./pages/MyPage/Settings";
+import Users from "./pages/Users";
 
 function App() {
   return (
@@ -58,6 +59,12 @@ function App() {
               {/* my-page  */}
               <Route path="profile" element={<Profile />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="user-mgt">
+                <Route index element={<Users />} />
+                <Route path="add" element={<h4>user management</h4>} />
+                <Route path="view/:userid" element={<h4>user management</h4>} />
+              </Route>
+              <Route path="role-mgt" element={<h4>Role management</h4>} />
             </Route>
           </Route>
           <Route

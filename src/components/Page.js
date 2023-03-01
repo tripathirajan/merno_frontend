@@ -3,10 +3,15 @@ import { Helmet } from 'react-helmet-async';
 import { forwardRef } from 'react';
 import { Box, Container, IconButton, Stack, Typography } from '@mui/material';
 import ArrowBackIosNewTwoToneIcon from '@mui/icons-material/ArrowBackIosNewTwoTone';
+import { useNavigate } from 'react-router-dom';
 
 const Page = forwardRef((props, ref) => {
-    const { children, title = '', actions, legend, subtitle, onBackClick, ...other } = props;
+    const { children, title = '', actions, legend, subtitle, enableGoBack = false, ...other } = props;
+    const navigate = useNavigate();
 
+    const handleOnBackClick = () => {
+        navigate(-1);
+    }
     return (
         <PageWithTitle title={title} ref={ref} {...other}>
             <Container>
@@ -17,7 +22,7 @@ const Page = forwardRef((props, ref) => {
                         alignItems="center"
                     >
                         {
-                            onBackClick && <IconButton title="Go Back" color="secondary" size="normal" onClick={onBackClick}>
+                            enableGoBack && <IconButton title="Go Back" color="secondary" size="normal" onClick={handleOnBackClick}>
                                 <ArrowBackIosNewTwoToneIcon fontSize="inherit" />
                             </IconButton>
                         }
@@ -40,7 +45,8 @@ const Page = forwardRef((props, ref) => {
 
 Page.propTypes = {
     children: PropTypes.node.isRequired,
-    title: PropTypes.string
+    title: PropTypes.string,
+    enableGoBack: PropTypes.bool
 };
 
 export default Page;

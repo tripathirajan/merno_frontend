@@ -5,7 +5,7 @@ import { DATETIME_FORMAT } from '../../constants';
 
 const DateTimeRenderer = props => {
     const { value } = props;
-    const renderValue = (value && dayjs(value).format(DATETIME_FORMAT)) || '';
+    const renderValue = (value && dayjs(value).format(DATETIME_FORMAT)) || 'N/A';
     return (<div>{renderValue}</div>)
 }
 

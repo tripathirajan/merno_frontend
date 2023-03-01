@@ -99,3 +99,7 @@ export const COMBO_LIST = '/combo';
 export const USER_PROFILE_UPDATE = '/user/updateInfo';
 export const USER_PROFILE_INFO = '/user/info';
 export const USER_PROFILE_RESET_PASSWORD = '/user/resetPassword';
+
+// user management
+export const USER_MGT_LIST = '/user/list';
+export const USER_MGT_ADD = '/user/add';

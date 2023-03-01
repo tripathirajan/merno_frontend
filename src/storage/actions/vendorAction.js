@@ -72,6 +72,9 @@ export const addVendor = ({
                 result.success = false;
                 break;
             case HTTP_STATUS_CODE_PARAMETER_MISSING:
+                result.message = "Please enter the values.";
+                result.success = false;
+                break;
             default:
                 break;
         }

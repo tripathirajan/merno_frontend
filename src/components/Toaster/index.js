@@ -1,7 +1,8 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from 'react';
 import { Alert, Snackbar, IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch, useSelector } from 'react-redux';
+import { hideToast, selectToast } from '../../storage/slices/uiSlices';
 
 export const toastType = {
     success: 'success',
@@ -13,16 +14,21 @@ export const toastType = {
 
 const DEFAULT_DISPLAY_TIMEOUT = 4000;
 
-const Toaster = props => {
+const Toaster = () => {
+    const toast = useSelector(selectToast);
+    const dispatch = useDispatch();
     const {
         open = false,
         vertical = 'top',
         horizontal = 'center',
         message,
-        handleClose,
         type = toastType.default,
         displayTimeout = DEFAULT_DISPLAY_TIMEOUT
-    } = props;
+    } = toast;
+
+    const handleClose = () => {
+        dispatch(hideToast());
+    }
     const action = (
         <React.Fragment>
             <IconButton
@@ -59,12 +65,6 @@ const Toaster = props => {
         autoHideDuration={displayTimeout}
         action={handleClose ? action : null}
     />)
-}
-
-Toaster.propTypes = {
-    open: PropTypes.bool.isRequired,
-    message: PropTypes.string.isRequired,
-    handleClose: PropTypes.func
 }
 
 export default React.memo(Toaster);

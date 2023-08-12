@@ -103,3 +103,4 @@ export const USER_PROFILE_RESET_PASSWORD = '/user/resetPassword';
 // user management
 export const USER_MGT_LIST = '/user/list';
 export const USER_MGT_ADD = '/user/add';
+export const USER_MGT_INFO = '/user/view';

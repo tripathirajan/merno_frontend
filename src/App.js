@@ -23,6 +23,8 @@ import Settings from "./pages/MyPage/Settings";
 import Users from "./pages/Users";
 import AddUser from "./pages/Users/AddUser";
 import Toaster from "./components/Toaster";
+import ViewUser from "./pages/Users/ViewUser";
+import Roles from "./pages/Roles";
 
 function App() {
   return (
@@ -65,9 +67,9 @@ function App() {
               <Route path="user-mgt">
                 <Route index element={<Users />} />
                 <Route path="add" element={<AddUser />} />
-                <Route path="view/:userid" element={<h4>user management</h4>} />
+                <Route path="view/:userId" element={<ViewUser />} />
               </Route>
-              <Route path="role-mgt" element={<h4>Role management</h4>} />
+              <Route path="role-mgt" element={<Roles />} />
             </Route>
           </Route>
           <Route

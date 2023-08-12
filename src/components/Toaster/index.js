@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Alert, Snackbar, IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,17 +18,20 @@ const Toaster = () => {
     const toast = useSelector(selectToast);
     const dispatch = useDispatch();
     const {
-        open = false,
+        open,
         vertical = 'top',
         horizontal = 'center',
         message,
         type = toastType.default,
         displayTimeout = DEFAULT_DISPLAY_TIMEOUT
-    } = toast;
+    } = useMemo(() => {
+        return toast;
+    }, [toast]);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         dispatch(hideToast());
-    }
+    }, [dispatch]);
+
     const action = (
         <React.Fragment>
             <IconButton

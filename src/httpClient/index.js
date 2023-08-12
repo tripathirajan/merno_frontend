@@ -14,6 +14,12 @@ export const httpClientPublic = axios.create({
     credentials: 'include'
 });
 
+httpClientPublic.interceptors.response.use((response) => {
+    return response;
+}, (err) => {
+    return err;
+})
+
 // http client for authorized request
 const httpClient = axios.create({
     baseURL: API_BASE_URL,

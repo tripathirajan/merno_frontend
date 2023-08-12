@@ -22,8 +22,13 @@ const menus = [
             },
             {
                 title: 'User',
-                path: '/user',
+                path: '/user-mgt',
                 icon: 'user'
+            },
+            {
+                title: 'Role',
+                path: '/role-mgt',
+                icon: 'roles'
             },
         ]
     },

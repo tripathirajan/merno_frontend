@@ -10,7 +10,8 @@ import AutoCompleteField from '../../components/AutoCompleteField';
 import FileUploader from '../../components/FileUploader';
 import { useNavigate } from 'react-router-dom';
 import { addNewProduct } from '../../storage/actions/productAction';
-import Toaster, { toastType } from '../../components/Toaster';
+import { toastType } from '../../components/Toaster';
+import { showToast } from '../../storage/slices/uiSlices';
 
 const CHAR_LIMIT = 200;
 
@@ -40,15 +41,13 @@ const combos = [
     { type: 'currency' },
     { type: 'unit' }
 ]
-const alertInititialValue = { show: false, message: '', type: toastType.default };
+
 const AddProduct = () => {
     const { productCategory = [], brand = [], packageType = [], unit = [], currency = [], vendor = [] } = useSelector(selectCombos);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const uploaderRef = useRef(null);
     const [descCounter, setDescCounter] = useState(CHAR_LIMIT);
-    const [appAlert, setAppAlert] = useState(alertInititialValue)
-
     const productForm = useFormik({
         initialValues: {
             productName: '',
@@ -72,12 +71,12 @@ const AddProduct = () => {
 
             const { success, message } = await dispatch(addNewProduct(values));
             if (success) {
-                setAppAlert({ show: true, message: "Product created successfully.", type: toastType.success })
+                dispatch(showToast({ message: "Product created successfully.", type: toastType.success }))
                 resetForm();
                 setFieldValue("image", null);
                 uploaderRef?.current?.resetImages();
             } else {
-                setAppAlert({ show: true, message, type: toastType.error });
+                dispatch(showToast({ message, type: toastType.error }))
             }
             setSubmitting(false);
         }
@@ -93,9 +92,6 @@ const AddProduct = () => {
         navigate('/product');
     }
 
-    const handleAlertClose = () => {
-        setAppAlert(alertInititialValue)
-    }
     useEffect(() => {
         loadCombos();
     }, [loadCombos]);
@@ -105,7 +101,6 @@ const AddProduct = () => {
             legend={`New Product`}
             onBackClick={handleGoBack}
         >
-            <Toaster open={appAlert.show} horizontal="right" message={appAlert.message} type={appAlert.type} handleClose={handleAlertClose} />
             <FormikProvider value={productForm}>
                 <Box
                     component={Form}

@@ -1,25 +1,22 @@
 import { Box, Button, Stack, TextField, Typography, styled, Avatar } from '@mui/material';
 import { FormikProvider, useFormik, Form } from 'formik';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import * as Yup from 'yup';
 import { IMAGE_ACTION_NONE, IMAGE_ACTION_RESET, IMAGE_ACTION_UPDATE } from '../../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserProfile } from '../../storage/slices/userSlice';
 import { updateUserProfile } from '../../storage/actions/userAction';
-import Toaster, { toastType } from '../../components/Toaster';
+import { toastType } from '../../components/Toaster';
+import { showToast } from '../../storage/slices/uiSlices';
 
 const ProfilePicPreview = styled(Avatar)(({ theme }) => ({
-    width: '72px',
-    height: '72px'
+    width: '100px',
+    height: '100px'
 }))
-
-const alertInititialValue = { show: false, message: '', type: toastType.default }
 
 const EditProfile = () => {
     const userInfo = useSelector(selectUserProfile);
     const dispatch = useDispatch();
-    const [appAlert, setAppAlert] = useState(alertInititialValue);
-
     const initialValues = useMemo(() => {
         return {
             fullName: userInfo?.fullName,
@@ -40,10 +37,10 @@ const EditProfile = () => {
             const { success } = await dispatch(updateUserProfile(values));
             setSubmitting(false);
             if (!success) {
-                setAppAlert({ show: true, message: 'Profile not updated', type: toastType.error })
+                dispatch(showToast({ message: 'Profile not updated', type: toastType.error }))
                 return;
             };
-            setAppAlert({ show: true, message: 'Profile updated successfully!', type: toastType.success })
+            dispatch(showToast({ message: 'Profile updated successfully!', type: toastType.success }))
         }
     });
     const { errors, values, touched, isSubmitting, handleSubmit, getFieldProps, setFieldValue } = formik;
@@ -69,9 +66,6 @@ const EditProfile = () => {
         return values?.imageAction === IMAGE_ACTION_RESET ? '' : (values?.image?.preview || userInfo?.image);
     }, [values, userInfo]);
 
-    const handleAlertClose = () => {
-        setAppAlert(alertInititialValue)
-    }
     const handleRemoveImage = () => {
         imageURL = '';
         setFieldValue("image", null);
@@ -82,7 +76,6 @@ const EditProfile = () => {
 
     return (
         <FormikProvider value={formik}>
-            <Toaster open={appAlert.show} horizontal="right" message={appAlert.message} type={appAlert.type} handleClose={handleAlertClose} />
             <Box
                 component={Form}
                 onSubmit={handleSubmit}

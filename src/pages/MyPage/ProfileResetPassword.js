@@ -1,16 +1,15 @@
 import { Box, TextField, Stack, Button } from '@mui/material';
 import { FormikProvider, useFormik, Form } from 'formik'
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
 import { resetPassword } from '../../storage/actions/userAction';
-import Toaster, { toastType } from '../../components/Toaster';
-
-const alertInititialValue = { show: false, message: '', type: toastType.default }
+import { toastType } from '../../components/Toaster';
+import { showToast } from '../../storage/slices/uiSlices';
 
 const ProfileResetPassword = () => {
   const dispatch = useDispatch();
-  const [appAlert, setAppAlert] = useState(alertInititialValue);
+
   const changePasswordForm = useFormik({
     initialValues: {
       currentPassword: '',
@@ -27,20 +26,16 @@ const ProfileResetPassword = () => {
       setSubmitting(false);
       resetForm();
       if (!success) {
-        setAppAlert({ show: true, message, type: toastType.error })
+        dispatch(showToast({ message, type: toastType.error }))
         return;
       };
-      setAppAlert({ show: true, message: 'Profile updated successfully!', type: toastType.success })
+      dispatch(showToast({ message: 'Profile updated successfully!', type: toastType.success }));
     }
   });
   const { errors, touched, isSubmitting, handleSubmit, getFieldProps } = changePasswordForm;
 
-  const handleAlertClose = () => {
-    setAppAlert(alertInititialValue)
-  }
   return (
     <FormikProvider value={changePasswordForm}>
-      <Toaster open={appAlert.show} horizontal="right" message={appAlert.message} type={appAlert.type} handleClose={handleAlertClose} />
       <Box
         component={Form}
         onSubmit={handleSubmit}

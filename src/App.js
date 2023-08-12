@@ -20,10 +20,16 @@ import ViewVendor from "./pages/Vendor/ViewVendor";
 import { AuthProvider } from "./contexts/AuthContext";
 import Profile from "./pages/MyPage/Profile";
 import Settings from "./pages/MyPage/Settings";
+import Users from "./pages/Users";
+import AddUser from "./pages/Users/AddUser";
+import Toaster from "./components/Toaster";
+import ViewUser from "./pages/Users/ViewUser";
+import Roles from "./pages/Roles";
 
 function App() {
   return (
     <AuthProvider>
+      <Toaster />
       <Routes>
         <Route path="/">
           <Route index element={<Navigate to="/login" replace />} />
@@ -58,6 +64,12 @@ function App() {
               {/* my-page  */}
               <Route path="profile" element={<Profile />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="user-mgt">
+                <Route index element={<Users />} />
+                <Route path="add" element={<AddUser />} />
+                <Route path="view/:userId" element={<ViewUser />} />
+              </Route>
+              <Route path="role-mgt" element={<Roles />} />
             </Route>
           </Route>
           <Route

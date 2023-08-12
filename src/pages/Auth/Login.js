@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
     Typography, Stack, Box,
     Checkbox,
@@ -12,8 +12,9 @@ import { useFormik, Form, FormikProvider } from 'formik'
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { login } from '../../storage/actions/authAction';
-import AppAlert from '../../components/Alert';
 import { PageWithTitle } from '../../components/Page';
+import { showToast } from '../../storage/slices/uiSlices';
+import { toastType } from '../../components/Toaster';
 
 const LoginSchema = Yup.object().shape({
     username: Yup.string().required('Email is required'),
@@ -23,7 +24,6 @@ const LoginSchema = Yup.object().shape({
 const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [errMsg, setErrMsg] = useState('')
     const location = useLocation();
     const { state } = location;
     const { redirectTo = '/dashboard' } = state || {};
@@ -36,16 +36,12 @@ const Login = () => {
         },
         validationSchema: LoginSchema,
         onSubmit: async (values, { setSubmitting }) => {
-            const { success, message } = await dispatch(login({ username: values.username, password: values.password }));
-            // console.log('login-result', success, message);
+            const { success } = await dispatch(login({ username: values.username, password: values.password }));
             setSubmitting(false)
             if (success) {
                 navigate(redirectTo);
             } else {
-                setErrMsg(message);
-                setTimeout(() => {
-                    setErrMsg('')
-                }, 5000)
+                dispatch(showToast({ message: "Unable to login please try again or contact your admin.", type: toastType.error }));
             }
         }
     });
@@ -67,9 +63,6 @@ const Login = () => {
                         Sign in to your account
                     </Typography>
                 </Box>
-                {
-                    errMsg && <AppAlert body={errMsg} />
-                }
                 <FormikProvider value={formik}>
 
                     <Box
